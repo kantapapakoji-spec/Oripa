@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+<title>SUPREME ORIPA RUSH v100</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:#030000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;touch-action:manipulation}
+body{min-height:100vh;display:flex;justify-content:center;align-items:flex-start;background:radial-gradient(circle at center,#3a0000,#050000 62%,#000);padding:14px 0}
+.app{width:min(420px,94vw);max-width:420px;border:4px solid #ffd700;border-radius:22px;background:linear-gradient(160deg,#420000,#060000 56%,#201300);padding:8px;box-shadow:0 0 34px rgba(255,215,0,.72),inset 0 0 24px rgba(255,255,255,.08)}
+.logoTitle{height:46px;border-radius:16px;background:linear-gradient(135deg,#220000,#7a0000 42%,#1a0000);border:2px solid #ffd700;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;margin-bottom:6px;pointer-events:none}
+.logoTitle:before{content:"";position:absolute;inset:-70%;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.55) 50%,transparent 58%);animation:titleShine 4s linear infinite}
+@keyframes titleShine{from{transform:translateX(-45%) rotate(12deg)}to{transform:translateX(45%) rotate(12deg)}}
+.logoText{position:relative;font-size:20px;font-weight:1000;letter-spacing:1px;background:linear-gradient(90deg,#ffd700,#fff,#ff4747,#ffd700);-webkit-background-clip:text;color:transparent;text-shadow:0 0 16px rgba(255,215,0,.65)}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:6px}
+.stat{background:rgba(0,0,0,.68);border:1px solid #9f792f;border-radius:10px;padding:4px 2px;text-align:center;font-size:10px;color:#ffe49a}
+.stat b{display:block;font-size:16px;color:#fff}.hide{filter:blur(7px);opacity:.55}
+.screen{height:470px;border:3px solid #9f792f;border-radius:18px;position:relative;overflow:hidden;padding:8px;text-align:center;transition:background .65s ease,box-shadow .65s ease,filter .35s ease;pointer-events:none}
+.screen:before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 50%,rgba(255,255,255,.035) 50%);background-size:100% 6px;pointer-events:none;z-index:0}
+.grass{background:radial-gradient(circle at top,#78e0ff,#1d8a3b 35%,#061b0d 88%);box-shadow:inset 0 0 36px rgba(0,255,120,.28)}
+.lava{background:radial-gradient(circle at center,#ff9e31,#8c0000 42%,#080000 88%);animation:lava 1.8s infinite alternate;box-shadow:inset 0 0 52px rgba(255,60,0,.5)}
+.temple{background:radial-gradient(circle,#fff3a0,#a56b00 35%,#180000 82%);animation:temple 1.3s infinite alternate;box-shadow:inset 0 0 70px rgba(255,215,0,.65)}
+@keyframes lava{to{filter:hue-rotate(16deg) brightness(1.14)}}@keyframes temple{to{filter:brightness(1.28) saturate(1.35)}}
+.pattern{position:absolute;inset:0;opacity:.16;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.32) 0 2px,transparent 2px 12px);pointer-events:none}
+.particles,.confettiWrap{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.spark{position:absolute;width:3px;height:3px;border-radius:50%;background:gold;opacity:.8;animation:spark 1.6s linear forwards}
+@keyframes spark{from{transform:translateY(90px);opacity:0}20%{opacity:1}to{transform:translateY(-170px);opacity:0}}
+.badge{position:absolute;top:6px;border:1px solid gold;border-radius:20px;background:rgba(0,0,0,.72);font-size:10px;padding:4px 8px;z-index:2}.left{left:6px}.right{right:6px;color:#fff3b0}
+.msg{position:relative;z-index:2;font-size:22px;font-weight:1000;margin-top:24px;text-shadow:0 0 15px red;min-height:28px}
+.sub{position:relative;z-index:2;font-size:12px;color:#ffe49a;min-height:15px}
+.reels{position:relative;z-index:2;display:flex;justify-content:center;gap:8px;margin:6px 0}
+.reel{width:64px;height:72px;border:3px solid gold;border-radius:13px;background:linear-gradient(#260000,#050000);display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:1000;color:gold;box-shadow:inset 0 0 14px #3a2200,0 0 17px rgba(255,215,0,.55)}
+.spin{animation:spin .22s infinite}@keyframes spin{0%{transform:translateY(-5px)}50%{transform:translateY(5px)}100%{transform:translateY(-5px)}}
+.rotate{animation:rotate .48s linear infinite}@keyframes rotate{0%{transform:rotateX(0) scale(1)}50%{transform:rotateX(180deg) scale(1.1)}100%{transform:rotateX(360deg) scale(1)}}
+.final{animation:final 2.1s cubic-bezier(.12,1.35,.22,1) forwards;color:#ffd700!important;text-shadow:0 0 10px #fff,0 0 24px gold,0 0 45px red}
+@keyframes final{0%{transform:rotate(0deg) scale(.35);opacity:.25}35%{transform:rotate(360deg) scale(1.12);opacity:1}70%{transform:rotate(720deg) scale(1.65)}100%{transform:rotate(1080deg) scale(1.26)}}
+.cardWrap{display:none;position:relative;z-index:2;align-items:center;flex-direction:column;pointer-events:auto}
+.psaCase{width:150px;height:216px;border-radius:18px;background:linear-gradient(135deg,#ffffffde,#aeb8c9aa,#ffffffcc);padding:7px;box-shadow:0 0 18px #fff,0 0 42px gold;position:relative;overflow:hidden;border:2px solid rgba(255,255,255,.9)}
+.psaCase:before{content:"";position:absolute;inset:-40%;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);animation:glass 3.4s linear infinite;pointer-events:none}
+@keyframes glass{from{transform:translateX(-50%) rotate(12deg)}to{transform:translateX(50%) rotate(12deg)}}
+.psaLabel{height:34px;background:#f5f5f8;border-radius:8px;border:1px solid #bbc3cf;color:#111;display:flex;align-items:center;justify-content:space-between;padding:3px 6px;font-weight:1000;font-size:11px}
+.psaLogo{background:#d71920;color:white;border-radius:5px;padding:4px 6px;font-size:12px}.grade{color:#d71920;font-size:17px}
+.cardArt{margin-top:6px;height:158px;border-radius:12px;border:4px solid white;display:flex;align-items:center;justify-content:center;background:#111;overflow:hidden;position:relative;font-weight:1000;text-shadow:0 0 8px #000}
+.cardArt img{width:100%;height:100%;object-fit:cover;display:none}
+.placeholder{display:inline-flex;align-items:center;justify-content:center;max-width:92%;min-height:58px;padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.78);border:2px solid #ffd700;color:#ffd700!important;font-weight:1000;font-size:13px;line-height:1.15;-webkit-text-stroke:.7px #000;text-shadow:0 0 2px #000,0 0 6px #000,0 0 12px #ffd700,0 0 22px #ff2d00;box-shadow:0 0 12px rgba(255,215,0,.65),inset 0 0 10px rgba(255,255,255,.08)}
+.rainbowArt{background:linear-gradient(135deg,red,orange,yellow,lime,cyan,blue,violet)}
+.rainbowArt:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 20%,rgba(255,255,255,.55),transparent 18%),linear-gradient(115deg,transparent 38%,rgba(255,255,255,.35) 48%,transparent 58%);pointer-events:none;animation:rainbowSweep 3.6s linear infinite}
+@keyframes rainbowSweep{from{transform:translateX(-60%)}to{transform:translateX(60%)}}
+.goldArt{background:linear-gradient(135deg,#fff3a0,#ffd700,#8c6b00)}
+.redArt{background:linear-gradient(135deg,#ff6b6b,#800000)}
+.greenArt{background:linear-gradient(135deg,#6bff9c,#006b2e)}
+.blueArt{background:linear-gradient(135deg,#6bc7ff,#003c8c)}
+.whiteArt{background:linear-gradient(135deg,#fff,#aaa);color:#111;text-shadow:none}
+.nonPsaCard{width:136px;height:190px;border-radius:18px;border:5px solid white;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:1000;box-shadow:0 0 16px white,0 0 28px rgba(255,215,0,.45);text-shadow:0 0 8px #000}
+.cardName{margin-top:5px;padding:5px 7px;border:2px solid gold;border-radius:10px;background:rgba(0,0,0,.78);font-size:13px;font-weight:900;max-width:96%;line-height:1.1}
+.rainbowName{color:#ffd700!important;-webkit-text-stroke:1px #000;text-shadow:0 0 2px #000,0 0 8px #ffd700,0 0 18px #ff2d00}
+.fly{animation:fly 1.64s cubic-bezier(.12,1.35,.35,1) forwards}
+@keyframes fly{0%{transform:translateY(-240px) scale(.18) rotate(-20deg);opacity:0}55%{transform:translateY(16px) scale(1.18) rotate(5deg);opacity:1}100%{transform:translateY(0) scale(1) rotate(0)}}
+.notice,.cutin,.freeze,.windBurst,.stageFlash{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;pointer-events:none!important}
+.notice{background:radial-gradient(circle,#fff,#ffd700 24%,#d00000 58%,rgba(0,0,0,.92));z-index:5;font-size:42px;font-weight:1000}
+.freeze{background:rgba(0,0,0,.55);z-index:5}
+.cutin{z-index:6;background:rgba(0,0,0,.86);font-size:40px;font-weight:1000;color:#fff3b0;text-shadow:0 0 15px white,0 0 35px gold,0 0 60px red}
+.stageFlash{z-index:8;background:radial-gradient(circle,#fff7b0 0%,rgba(255,120,0,.75) 38%,rgba(0,0,0,.72) 76%);color:#fff;font-size:38px;font-weight:1000;-webkit-text-stroke:1px #5c0000;text-shadow:0 0 10px #fff,0 0 24px gold,0 0 46px red}
+.stageFlash.show{display:flex;animation:stageFlash 1.25s ease-in-out forwards}
+@keyframes stageFlash{0%{opacity:0;filter:brightness(1);transform:scale(.85)}20%{opacity:1;filter:brightness(2.2);transform:scale(1.04)}70%{opacity:1;filter:brightness(1.35);transform:scale(1)}100%{opacity:0;filter:brightness(1);transform:scale(1.12)}}
+.stageShift{animation:stageShift 1.15s ease-in-out}
+@keyframes stageShift{0%{filter:brightness(1) saturate(1)}35%{filter:brightness(2.1) saturate(1.6)}65%{filter:brightness(1.25) saturate(1.25)}100%{filter:brightness(1) saturate(1)}}
+.confetti{position:absolute;width:8px;height:12px;opacity:.9;animation:fall 1.8s linear forwards;pointer-events:none}
+.confetti.small{width:5px;height:8px;opacity:.65;animation-duration:2.2s}
+.confetti.large{width:11px;height:16px;opacity:1;animation-duration:1.55s;filter:drop-shadow(0 0 4px white)}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg)}100%{transform:translateY(560px) rotate(720deg)}}
+.windBurst{left:50%;top:58%;width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.9);transform:translate(-50%,-50%);z-index:6;animation:windBurst .72s ease-out forwards}
+@keyframes windBurst{0%{width:18px;height:18px;opacity:.95;box-shadow:0 0 12px white}100%{width:320px;height:320px;opacity:0;box-shadow:0 0 60px gold}}
+.resultList{position:relative;z-index:2;display:none;height:280px;overflow:auto;background:linear-gradient(180deg,rgba(0,0,0,.92),rgba(24,0,0,.92));border:3px solid #ffd700;border-radius:12px;padding:8px;text-align:left;font-size:12px;pointer-events:auto;box-shadow:inset 0 0 18px rgba(255,255,255,.06),0 0 16px rgba(255,215,0,.55)}
+.resultToggleHint{display:block;text-align:center;margin:0 0 8px;padding:4px 8px;border-radius:999px;background:linear-gradient(135deg,#ffd700,#ff7b00);color:#170000;border:2px solid #fff3b0;font-weight:900;font-size:12px;text-shadow:none}
+.resultList .rainbowResult,.resultList .rareResult,.resultList .normalResult{margin:4px 0;padding:7px 8px;border-radius:10px;font-weight:900;position:relative;overflow:hidden}
+.resultList .rainbowResult{background:linear-gradient(135deg,#100000,#3c0000 35%,#000);border:2px solid #ffd700;color:#ffd700!important;-webkit-text-stroke:.7px #000;text-shadow:0 0 3px #000,0 0 8px #000,0 0 14px #ffd700}
+.resultList .goldResult{background:linear-gradient(135deg,#3a2500,#ffd700 52%,#5c3900);color:#1a0800!important;text-shadow:0 0 2px #fff;border:2px solid #fff0a0}
+.resultList .redResult{background:linear-gradient(135deg,#3a0000,#c40000,#210000);color:#fff;border:2px solid #ff7777}
+.resultList .greenResult{background:linear-gradient(135deg,#003a12,#00b84f,#001d09);color:#fff;border:2px solid #6bff9c}
+.resultList .blueResult{background:linear-gradient(135deg,#00142f,#006bd6,#000b1f);color:#fff;border:2px solid #7edaff}
+.resultList .normalResult{background:linear-gradient(135deg,#222,#555,#111);color:#f5f5f5;border:1px solid rgba(255,255,255,.35)}
+.buttonZone{display:flex;flex-direction:column;gap:6px;margin-top:6px;pointer-events:auto!important;position:relative;z-index:100}
+.mainBtns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.btn{min-height:48px;border:0;border-radius:15px;color:#fff;font-size:17px;font-weight:1000;background:linear-gradient(#ffdf68,#c40000 50%,#4b0000);box-shadow:0 5px 0 #240000}
+.controls{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.ctrl{min-height:38px;border:0;border-radius:12px;color:#fff;font-size:12px;font-weight:900}
+.reset{background:linear-gradient(#ff7676,#750000)}
+.skip{background:linear-gradient(#ffd34d,#8a5500)}
+.list{background:linear-gradient(#b28cff,#3b007a)}
+.setting{background:linear-gradient(#4dd2ff,#003f8a)}
+.spec{background:linear-gradient(#fff3a0,#8a4b00)}
+.listBlock{display:none;margin-top:8px;border:4px solid #fff3b0;border-radius:20px;padding:10px;background:radial-gradient(circle at top,#fff0a8 0%,#ff4b2b 32%,rgba(0,0,0,.96) 72%);box-shadow:0 0 24px gold,0 0 50px red}
+.listBlock h2{margin:2px 0 8px;font-size:24px;color:#fff;-webkit-text-stroke:1px #8b0000;text-shadow:0 0 8px #fff,0 0 18px gold,0 0 32px red;text-align:center}
+.panel{display:grid;gap:6px;max-height:250px;overflow:auto}
+.row{display:flex;justify-content:space-between;align-items:center;border:0;border-radius:14px;padding:8px 10px;font-size:13px;font-weight:900}
+.row span:last-child{min-width:54px;padding:4px 8px;border-radius:999px;background:rgba(0,0,0,.52);border:1px solid rgba(255,255,255,.35);text-align:center;color:#fff!important}
+.rainbowRow{background:linear-gradient(90deg,red,orange,yellow,lime,cyan,blue,violet);color:#fff;text-shadow:0 0 4px #000,0 0 12px #000;border:2px solid #fff}
+.goldRow{background:linear-gradient(135deg,#fff8b8,#ffd700,#8b5a00);color:#241400}
+.redRow{background:linear-gradient(135deg,#ff7777,#b00000,#250000);color:#fff}
+.greenRow{background:linear-gradient(135deg,#6bff9c,#008c3b,#002d12);color:#fff}
+.blueRow{background:linear-gradient(135deg,#8ee1ff,#006bd6,#001a44);color:#fff}
+.whiteRow{background:linear-gradient(135deg,#fff,#d9d9d9,#666);color:#111}
+.lastRow{background:linear-gradient(135deg,#fff,#ff5fb7,#6a0046);color:#fff;text-shadow:0 0 4px #000,0 0 12px #000}
+.logBox{background:rgba(255,255,255,.08);border-radius:12px;padding:6px;margin-top:6px;font-size:12px;pointer-events:auto}
+.log{display:none;max-height:72px;overflow:auto;margin-top:4px}
+.show{display:block}
+.settings{display:none;margin-top:8px;background:rgba(0,0,0,.96);border:4px solid gold;border-radius:20px;padding:14px}
+.settings input{width:100%;font-size:22px;padding:10px;border-radius:12px;border:2px solid gold;background:#111;color:#fff;text-align:center;font-weight:900;margin:6px 0 14px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions button{min-height:50px;border:0;border-radius:14px;color:#fff;font-size:17px;font-weight:900}
+.apply{background:linear-gradient(#4cff7a,#006b1f)}
+.close{background:linear-gradient(#aaa,#333)}
+.flash{animation:flash .64s linear}
+@keyframes flash{0%{filter:brightness(1)}25%{filter:brightness(2.2)}50%{filter:brightness(1)}75%{filter:brightness(4.5)}100%{filter:brightness(1)}}
+button{touch-action:manipulation!important;pointer-events:auto!important;cursor:pointer;position:relative;z-index:999;-webkit-user-select:none;user-select:none}
+.small{font-size:10px;text-align:center;opacity:.75;margin-top:3px}
+@media(max-height:720px){body{padding:8px 0}.screen{height:430px}.logoTitle{height:40px}.logoText{font-size:18px}.msg{margin-top:20px;font-size:20px}.reel{width:60px;height:66px;font-size:38px}.psaCase{width:138px;height:198px}.cardArt{height:142px}.nonPsaCard{width:124px;height:170px}.btn{min-height:44px}.ctrl{min-height:35px}.panel{max-height:210px}}
+
+.specBlock{
+  display:none;
+  margin-top:8px;
+  border:4px solid #7edaff;
+  border-radius:20px;
+  padding:10px;
+  background:linear-gradient(160deg,rgba(0,20,55,.96),rgba(0,0,0,.96) 60%,rgba(70,0,0,.96));
+  box-shadow:0 0 22px #4dd2ff,0 0 42px rgba(255,215,0,.5);
+}
+.specBlock h2{
+  margin:2px 0 8px;
+  font-size:22px;
+  color:#fff;
+  -webkit-text-stroke:1px #003f8a;
+  text-shadow:0 0 8px #fff,0 0 18px #4dd2ff,0 0 32px gold;
+  text-align:center;
+}
+.specGrid{
+  display:grid;
+  gap:7px;
+  max-height:260px;
+  overflow:auto;
+}
+.specCard{
+  border-radius:14px;
+  padding:9px 10px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.28);
+  text-align:left;
+  font-size:12px;
+  line-height:1.45;
+  box-shadow:inset 0 0 10px rgba(255,255,255,.06);
+}
+.specCard b{
+  color:#ffd700;
+  font-size:13px;
+  text-shadow:0 0 8px #000;
+}
+.specCard .tag{
+  display:inline-block;
+  margin:2px 4px 2px 0;
+  padding:3px 7px;
+  border-radius:999px;
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.35);
+  color:#fff;
+  font-weight:900;
+}
+
+</style>
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="logoTitle"><div class="logoText">SUPREME ORIPA RUSH</div></div>
+    <div class="stats">
+      <div class="stat">残り<b id="remain">140</b></div>
+      <div class="stat" id="hitStat">当たり残り<b id="hitRemain" class="hide">??</b></div>
+      <div class="stat">引いた数<b id="drawn">0</b></div>
+    </div>
+    <div class="screen grass" id="screen">
+      <div class="pattern"></div><div class="particles" id="particles"></div><div class="confettiWrap" id="confetti"></div>
+      <div class="badge left" id="stage">草原ステージ</div><div class="badge right">PSA MODE</div>
+      <div class="notice" id="notice">ポキューン</div><div class="freeze" id="freeze"></div><div class="cutin" id="cutin">STAGE UP</div><div class="stageFlash" id="stageFlash">STAGE UP</div>
+      <div class="msg" id="msg">PUSHで開封</div><div class="sub" id="sub">v100 仕様ボタン追加版</div>
+      <div class="reels"><div id="r1" class="reel">?</div><div id="r2" class="reel">?</div><div id="r3" class="reel">?</div></div>
+      <div class="cardWrap" id="card"></div><div class="resultList" id="resultList"></div>
+    </div>
+    <div class="buttonZone">
+      <div class="mainBtns"><button class="btn" id="draw1" type="button">1回</button><button class="btn" id="draw10" type="button">10連</button><button class="btn" id="draw100" type="button">100連</button></div>
+      <div class="controls"><button class="ctrl reset" id="reset" type="button">リセット</button><button class="ctrl skip" id="skip" type="button">スキップ</button><button class="ctrl list" id="list" type="button">封入一覧</button><button class="ctrl setting" id="setting" type="button">設定</button><button class="ctrl spec" id="spec" type="button">仕様</button></div>
+    </div>
+    <div class="listBlock" id="listBlock"><h2>封入一覧</h2><div class="small">虹 → 金 → 赤 → 緑 → 青 → 白 → ラストワン</div><div class="panel" id="panel"></div></div>
+    <div class="specBlock" id="specBlock">
+      <h2>オリパ仕様</h2>
+      <div class="specGrid">
+        <div class="specCard">
+          <b>基本仕様</b><br>
+          全体数量：設定で変更可能<br>
+          当たり数：設定で変更可能<br>
+          1回 / 10連 / 100連 に対応
+        </div>
+        <div class="specCard">
+          <b>封入順・表示順</b><br>
+          <span class="tag">🌈 虹：PSA10当たり</span>
+          <span class="tag">🏆 金：低排出BOX</span>
+          <span class="tag">🔥 赤：中レア</span>
+          <span class="tag">🍀 緑：将来用</span>
+          <span class="tag">💧 青：小レア</span>
+          <span class="tag">⚪ 白：ノーマル</span><br>
+          最下段にラストワン賞を表示
+        </div>
+        <div class="specCard">
+          <b>演出仕様</b><br>
+          草原ステージから開始し、溶岩ステージ、神殿ステージへステップアップ。<br>
+          金・虹の場合のみポキューン発生抽選あり（50%）。<br>
+          虹当たり時は777全回転、祝福音、紙吹雪、PSA風カード表示。
+        </div>
+        <div class="specCard">
+          <b>10連 / 100連仕様</b><br>
+          10連は残り10枚以上、100連は残り100枚以上で実行可能。<br>
+          最後に代表カードを表示し、カードをタップすると排出一覧に切り替え。<br>
+          一覧をタップするとカード表示に戻る。
+        </div>
+        <div class="specCard">
+          <b>ログ仕様</b><br>
+          ノーマルカード以外は当たり/レアログに表示。<br>
+          「何回転目」で出たかも表示。
+        </div>
+        <div class="specCard">
+          <b>画像差し替え</b><br>
+          images フォルダに hit1.png〜hit10.png を入れると、虹PSAカード画像として表示。<br>
+          画像がない場合は高級プレースホルダーで表示。
+        </div>
+      </div>
+    </div>
+
+    <div class="settings" id="settings"><h2>設定</h2><label>全体数量</label><input id="totalInput" type="number" value="140"><label>当たり数</label><input id="hitInput" type="number" value="10"><div class="actions"><button class="apply" id="apply" type="button">反映</button><button class="close" id="close" type="button">閉じる</button></div></div>
+    <div class="logBox" id="logBox">当たり/レアログ（タップ）<div class="log" id="log">まだレア排出はありません</div></div>
+    <div class="small">v100：仕様ボタン追加 / ボタン完全独立 / クオリティ維持</div>
+  </div>
+<script>
+const hits=["PSA10 ポンチョピカチュウ","PSA10 マリオピカチュウ","PSA10 ルイージピカチュウ","PSA10 お祝いピカチュウ","PSA10 ゴールドピカチュウ","PSA10 メガ東京ピカチュウ","PSA10 悪いゲンガー","PSA10 悪いリザードン","PSA10 ガンバリーリエ","PSA10 アセロラ"];
+const misses=[["ノーマルカード",91,"white"],["ムニキスBOX",26,"blue"],["ヒロシマBOX",3,"gold"],["フクオカBOX",3,"gold"],["トウホクBOX",3,"gold"],["メガドリームBOX",4,"red"]];
+let total=Number(localStorage.getItem("oripa_total")||140),hitCount=Number(localStorage.getItem("oripa_hit")||10),deck=[],drawn=0,playing=false,skip=false,hitShown=false,spinTimer=null,lastCards=[],logHits=[],audio=null,bgm=null,resultMode="card";
+const $=id=>document.getElementById(id), reels=[$("r1"),$("r2"),$("r3")];
+
+function initAudio(){try{if(!audio)audio=new(window.AudioContext||window.webkitAudioContext)();if(audio.state==="suspended")audio.resume()}catch(e){}}
+function tone(f,d=.1,v=.08,type="square"){try{initAudio();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;o.type=type;g.gain.value=v;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch(e){}}
+function bgmStart(){bgmStop();let seq=[98,196,294,392,330,392,494,392],i=0;bgm=setInterval(()=>{tone(seq[i%seq.length],.06,.025,i%2?'triangle':'sawtooth');i++},260)}
+function bgmStop(){if(bgm){clearInterval(bgm);bgm=null}}
+function wait(ms){return new Promise(r=>setTimeout(r,skip?1:ms*2))}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function scaledMiss(m){let p=[.70,.20,.02,.02,.02,.04],used=0;return misses.map((s,i)=>{let c=i===5?m-used:Math.floor(m*p[i]);used+=c;return[s[0],c,s[2]]})}
+function build(){let h=[],full=Math.floor(hitCount/10),rem=hitCount%10;for(let k=0;k<full;k++)hits.forEach((x,i)=>h.push({hit:true,name:x,rank:"rainbow",idx:i+1}));shuffle(hits.map((x,i)=>[x,i+1])).slice(0,rem).forEach(x=>h.push({hit:true,name:x[0],rank:"rainbow",idx:x[1]}));let m=[];let missTotal=Math.max(0,total-hitCount);let specs=missTotal===130?misses:scaledMiss(missTotal);specs.forEach(s=>{for(let i=0;i<s[1];i++)m.push({hit:false,name:s[0],rank:s[2]})});shuffle(h);shuffle(m);let g=h.pop(),lastSize=Math.min(10,total),last=m.splice(0,g?lastSize-1:lastSize);if(g)last.push(g);deck=[...shuffle(last).reverse(),...shuffle([...m,...h]).reverse()];drawn=0;logHits=[];update();panel();setStage("grass")}
+function update(){$("remain").textContent=deck.length;$("drawn").textContent=drawn;let h=deck.filter(c=>c.hit).length;$("hitRemain").textContent=hitShown?h:"??";$("hitRemain").className=hitShown?"":"hide"}
+function panel(){let specs=scaledMiss(Math.max(0,total-hitCount));let gold=[],red=[],green=[],blue=[],white=[];specs.forEach(s=>{if(s[2]==="gold")gold.push(s);else if(s[2]==="red")red.push(s);else if(s[2]==="green")green.push(s);else if(s[2]==="blue")blue.push(s);else white.push(s)});let rows=`<div class="row rainbowRow"><span>🌈 PSA10当たり</span><span>${hitCount}本</span></div>`;gold.forEach(s=>rows+=`<div class="row goldRow"><span>🏆 ${s[0]}</span><span>${s[1]}本</span></div>`);red.forEach(s=>rows+=`<div class="row redRow"><span>🔥 ${s[0]}</span><span>${s[1]}本</span></div>`);green.forEach(s=>rows+=`<div class="row greenRow"><span>🍀 ${s[0]}</span><span>${s[1]}本</span></div>`);blue.forEach(s=>rows+=`<div class="row blueRow"><span>💧 ${s[0]}</span><span>${s[1]}本</span></div>`);white.forEach(s=>rows+=`<div class="row whiteRow"><span>⚪ ${s[0]}</span><span>${s[1]}本</span></div>`);rows+=`<div class="row lastRow"><span>🎁 ラストワン賞</span><span>リーリエ</span></div>`;$("panel").innerHTML=rows}
+function setStage(t){$("screen").className="screen "+t;$("stage").textContent={grass:"草原ステージ",lava:"溶岩ステージ",temple:"神殿ステージ"}[t];if(t==="temple")spawnParticles()}
+function stageFor(c){if(c.rank==="rainbow"||c.rank==="gold")return Math.random()<.82?"temple":(Math.random()<.5?"grass":"lava");if(c.rank==="red"||c.rank==="blue"||c.rank==="green")return"lava";return"grass"}
+function spawnParticles(){for(let i=0;i<26;i++){let s=document.createElement("span");s.className="spark";s.style.left=Math.random()*100+"%";s.style.bottom=Math.random()*30+"px";s.style.animationDelay=Math.random()*0.8+"s";$("particles").appendChild(s);setTimeout(()=>s.remove(),2200)}}
+function spawnConfetti(){const wrap=$("confetti");if(!wrap)return;for(let i=0;i<70;i++){const c=document.createElement("span");const size=Math.random();c.className="confetti "+(size<.25?"large":size<.65?"":"small");c.style.left=Math.random()*100+"%";const colors=["#ffd700","#ff4d4d","#4dd2ff","#4dff88","#ffffff","#ff7bff"];c.style.background=colors[Math.floor(Math.random()*colors.length)];c.style.animationDelay=(Math.random()*0.75)+"s";wrap.appendChild(c);setTimeout(()=>c.remove(),2600)}}
+function spawnWindBurst(){const screen=$("screen");const w=document.createElement("span");w.className="windBurst";w.style.display="block";screen.appendChild(w);setTimeout(()=>w.remove(),900)}
+async function stageEffect(text){const f=$("stageFlash");if(f){f.textContent=text;f.classList.remove("show");void f.offsetWidth;f.classList.add("show")} $("screen").classList.remove("stageShift");void $("screen").offsetWidth;$("screen").classList.add("stageShift");tone(110,.28,.13,"sine");setTimeout(()=>tone(330,.18,.09,"triangle"),260);setTimeout(()=>tone(660,.2,.08,"triangle"),540);await wait(650)}
+async function stageFlow(s){setStage("grass");$("msg").textContent="草原ステージ";await wait(520);if(s==="lava"||s==="temple"){await stageEffect("STAGE UP");setStage("lava");$("msg").textContent="溶岩ステージ";await wait(620)}if(s==="temple"){await stageEffect("FINAL STAGE");setStage("temple");$("msg").textContent="神殿ステージ";await wait(760)}}
+function spin(){clearInterval(spinTimer);reels.forEach(r=>{r.classList.remove("rotate","final");r.classList.add("spin")});spinTimer=setInterval(()=>reels.forEach(r=>r.textContent=Math.floor(Math.random()*10)),170)}
+async function stopNums(nums){clearInterval(spinTimer);for(let i=0;i<3;i++){reels[i].classList.remove("spin");reels[i].textContent=nums[i];tone(220+i*120,.1,.07);await wait(210)}}
+function nums(c){if(c.rank==="gold")return["3","3","3"];if(c.rank==="red")return["5","5","5"];if(c.rank==="green")return["4","4","4"];if(c.rank==="blue"){let n=["2","4","6"][Math.floor(Math.random()*3)];return[n,n,n]}return["1","4","9"]}
+async function pokyunMaybe(c){if((c.rank==="gold"||c.rank==="rainbow")&&Math.random()<.5){$("notice").style.display="flex";[520,980,1560,2300,3100].forEach((f,i)=>setTimeout(()=>tone(f,.16,.13,"square"),i*160));await wait(650);$("notice").style.display="none";bgmStop();$("freeze").style.display="flex";await wait(500);$("freeze").style.display="none";bgmStart()}}
+function celebrationSound(){[[523,.18,.12,"triangle"],[659,.18,.12,"triangle"],[784,.18,.13,"triangle"],[1046,.22,.14,"square"],[1318,.22,.13,"triangle"],[1568,.3,.12,"triangle"],[2093,.42,.10,"sine"]].forEach((x,i)=>setTimeout(()=>tone(x[0],x[1],x[2],x[3]),i*150));setTimeout(()=>tone(98,.7,.09,"sine"),120)}
+async function premium777(){clearInterval(spinTimer);$("msg").textContent="777 全回転";const patterns=[["7","-","-"],["-","7","-"],["-","-","7"],["7","7","-"],["-","7","7"],["7","-","7"]];let idx=0;reels.forEach(r=>{r.textContent="7";r.classList.add("rotate")});spinTimer=setInterval(()=>{let p=patterns[idx++%patterns.length];reels.forEach((r,i)=>r.textContent=p[i])},300);await wait(1450);clearInterval(spinTimer);bgmStop();reels.forEach(r=>{r.classList.remove("rotate","spin");r.textContent="7";r.classList.add("final")});tone(1500,.25,.14,"square");setTimeout(()=>tone(2200,.22,.12,"triangle"),240);await wait(1050);reels.forEach(r=>r.classList.remove("final"));$("msg").textContent="777揃い";celebrationSound();spawnConfetti();spawnWindBurst();$("app").classList.add("flash");setTimeout(()=>$("app").classList.remove("flash"),1400)}
+function cardHtml(c){if(c.rank==="rainbow"){return `<div class="psaCase"><div class="psaLabel"><span class="psaLogo">PSA</span><span>GEM MINT</span><span class="grade">10</span></div><div class="cardArt rainbowArt"><img id="cardImg"><span id="ph" class="placeholder">PSA10<br>${c.name}</span></div></div>`}return `<div class="nonPsaCard ${c.rank}Art">${c.rank==="gold"?"金BOX":c.rank==="red"?"赤BOX":c.rank==="green"?"緑BOX":c.rank==="blue"?"青BOX":"NORMAL"}</div>`}
+function showCard(c,cards){resultMode="card";$("card").style.display="flex";$("resultList").style.display="none";$("card").innerHTML=cardHtml(c)+`<div id="cardName" class="cardName ${c.hit?'rainbowName':''}">${(c.hit?"GOD：":"")+c.name+(cards.length>1?" ほか"+(cards.length-1)+"枚":"")}</div><div class="small">${cards.length>1?"タップで一覧表示":""}</div>`;if(c.hit){let img=$("cardImg"),ph=$("ph");img.src=`images/hit${c.idx}.png`;img.onload=()=>{img.style.display="block";ph.style.display="none"};img.onerror=()=>{img.style.display="none";ph.style.display="inline-flex"}}$("card").classList.remove("fly");void $("card").offsetWidth;$("card").classList.add("fly");if(c.hit)spawnWindBurst()}
+function best(cards){return cards.find(c=>c.hit)||cards.find(c=>c.rank==="gold")||cards.find(c=>c.rank==="red")||cards.find(c=>c.rank==="green")||cards.find(c=>c.rank==="blue")||cards[0]}
+function showList(cards){resultMode="list";$("card").style.display="none";$("resultList").style.display="block";$("resultList").innerHTML=`<div class="resultToggleHint">一覧表示中：タップでカードに戻る</div>`+cards.map((c,i)=>{if(c.hit)return `<div class="rainbowResult">🌈 ${i+1}. ${c.name}</div>`;if(c.name!=="ノーマルカード"){const mark=c.rank==="gold"?"🏆":c.rank==="red"?"🔥":c.rank==="green"?"🍀":c.rank==="blue"?"💧":"⭐";const cls=c.rank==="gold"?"goldResult":c.rank==="red"?"redResult":c.rank==="green"?"greenResult":c.rank==="blue"?"blueResult":"rareResult";return `<div class="rareResult ${cls}">${mark} ${i+1}. ${c.name}</div>`}return `<div class="normalResult">${i+1}. ${c.name}</div>`}).join("")}
+function showCardFromLast(){if(lastCards.length)showCard(best(lastCards),lastCards)}
+async function draw(n){initAudio();if(playing)return;if(n===10&&deck.length<10)return alert("10連は残り10枚以上");if(n===100&&deck.length<100)return alert("100連は残り100枚以上");if(!deck.length)return;playing=true;skip=false;bgmStart();$("card").style.display="none";$("resultList").style.display="none";$("specBlock").style.display="none";let cnt=Math.min(n,deck.length),cards=[];for(let i=0;i<cnt;i++)cards.push(deck.pop());drawn+=cnt;update();lastCards=cards;let main=best(cards),s=stageFor(main);spin();await pokyunMaybe(main);await stageFlow(s);if(main.hit)await premium777();else{await stopNums(nums(main));bgmStop()}showCard(main,cards);cards.forEach((c,i)=>{if(c.hit||c.name!=="ノーマルカード"){const rotation=drawn-cards.length+i+1;const mark=c.hit?"🌈当たり":(c.rank==="gold"?"🏆金":c.rank==="red"?"🔥赤":c.rank==="green"?"🍀緑":c.rank==="blue"?"💧青":"⭐レア");logHits.unshift(rotation+"回転目 "+mark+" "+c.name)}});$("log").innerHTML=logHits.length?logHits.join("<br>"):"まだレア排出はありません";playing=false}
+function skipAll(){skip=true;bgmStop();clearInterval(spinTimer);["notice","cutin","freeze","stageFlash"].forEach(id=>{const el=$(id);if(el)el.style.display="none"});reels.forEach(r=>r.classList.remove("spin","rotate","final"));playing=false}
+function openSettings(){$("listBlock").style.display="none";$("specBlock").style.display="none";$("totalInput").value=total;$("hitInput").value=hitCount;$("settings").style.display=$("settings").style.display==="block"?"none":"block"}
+function applySettings(){let t=parseInt($("totalInput").value||140),h=parseInt($("hitInput").value||10);if(h>t)h=t;localStorage.setItem("oripa_total",t);localStorage.setItem("oripa_hit",h);location.reload()}
+function bind(){ $("draw1").onclick=()=>draw(1);$("draw10").onclick=()=>draw(10);$("draw100").onclick=()=>draw(100);$("reset").onclick=()=>location.reload();$("skip").onclick=skipAll;$("list").onclick=()=>{$("specBlock").style.display="none";$("settings").style.display="none";$("listBlock").style.display=$("listBlock").style.display==="block"?"none":"block"};$("setting").onclick=openSettings;$("spec").onclick=()=>{$("listBlock").style.display="none";$("settings").style.display="none";$("specBlock").style.display=$("specBlock").style.display==="block"?"none":"block"};$("apply").onclick=applySettings;$("close").onclick=()=>{$("settings").style.display="none"};$("hitStat").onclick=()=>{hitShown=!hitShown;update()};$("logBox").onclick=()=>{$("log").classList.toggle("show")};$("card").onclick=()=>{if(lastCards.length>1)showList(lastCards)};$("resultList").onclick=showCardFromLast }
+bind();build();
+</script>
+</body>
+</html>
