@@ -1,0 +1,154 @@
+[
+  {
+    "id": 1,
+    "name": "サバンナスマイル",
+    "file": "assets/images/rewards/collection_slot_01_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_01_v4.jpg",
+    "rare": "R",
+    "owned": false
+  },
+  {
+    "id": 2,
+    "name": "制服ヒロイン・春の出会い",
+    "file": "assets/images/rewards/collection_slot_02_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_02_v4.jpg",
+    "rare": "R",
+    "owned": false
+  },
+  {
+    "id": 3,
+    "name": "海辺のスーツヒロイン",
+    "file": "assets/images/rewards/collection_slot_03_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_03_v4.jpg",
+    "rare": "R",
+    "owned": false
+  },
+  {
+    "id": 4,
+    "name": "弓道ヒロイン",
+    "file": "assets/images/rewards/collection_slot_04_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_04_v4.jpg",
+    "rare": "R",
+    "owned": false
+  },
+  {
+    "id": 5,
+    "name": "ナースお姉さん",
+    "file": "assets/images/rewards/collection_slot_05_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_05_v4.jpg",
+    "rare": "SR",
+    "owned": false
+  },
+  {
+    "id": 6,
+    "name": "海辺の振り向き",
+    "file": "assets/images/rewards/collection_slot_06_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_06_v4.jpg",
+    "rare": "SR",
+    "owned": false
+  },
+  {
+    "id": 7,
+    "name": "夜景の女社長",
+    "file": "assets/images/rewards/collection_slot_07_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_07_v4.jpg",
+    "rare": "SR",
+    "owned": false
+  },
+  {
+    "id": 8,
+    "name": "雨の日の照れ笑顔",
+    "file": "assets/images/rewards/collection_slot_08_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_08_v4.jpg",
+    "rare": "SR",
+    "owned": false
+  },
+  {
+    "id": 9,
+    "name": "陸上ランナー",
+    "file": "assets/images/rewards/collection_slot_09_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_09_v4.jpg",
+    "rare": "SSR",
+    "owned": false
+  },
+  {
+    "id": 10,
+    "name": "プールサイドスイマー",
+    "file": "assets/images/rewards/collection_slot_10_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_10_v4.jpg",
+    "rare": "SSR",
+    "owned": false
+  },
+  {
+    "id": 11,
+    "name": "現場ガッテン作業員",
+    "file": "assets/images/rewards/collection_slot_11_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_11_v4.jpg",
+    "rare": "SSR",
+    "owned": false
+  },
+  {
+    "id": 12,
+    "name": "サーファーガール",
+    "file": "assets/images/rewards/collection_slot_12_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_12_v4.jpg",
+    "rare": "SSR",
+    "owned": false
+  },
+  {
+    "id": 13,
+    "name": "サンバカーニバル",
+    "file": "assets/images/rewards/collection_slot_13_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_13_v4.jpg",
+    "rare": "UR",
+    "owned": false
+  },
+  {
+    "id": 14,
+    "name": "特別イベントヒロイン",
+    "file": "assets/images/rewards/collection_slot_14_special_heroine_final.jpg",
+    "thumb": "assets/images/rewards/collection_slot_14_special_heroine_final.jpg",
+    "rare": "UR",
+    "owned": false
+  },
+  {
+    "id": 15,
+    "name": "メガネメイド",
+    "file": "assets/images/rewards/collection_slot_15_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_15_v4.jpg",
+    "rare": "UR",
+    "owned": false
+  },
+  {
+    "id": 16,
+    "name": "アメリカンガール",
+    "file": "assets/images/rewards/collection_slot_16_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_16_v4.jpg",
+    "rare": "UR",
+    "owned": false
+  },
+  {
+    "id": 17,
+    "name": "クール婦警",
+    "file": "assets/images/rewards/collection_slot_17_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_17_v4.jpg",
+    "rare": "LEGEND",
+    "owned": false
+  },
+  {
+    "id": 18,
+    "name": "読者モデル",
+    "file": "assets/images/rewards/collection_slot_18_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_18_v4.jpg",
+    "rare": "LEGEND",
+    "owned": false
+  },
+  {
+    "id": 19,
+    "name": "全員集合",
+    "file": "assets/images/rewards/collection_slot_19_v4.jpg",
+    "thumb": "assets/images/rewards/collection_slot_19_v4.jpg",
+    "rare": "LEGEND",
+    "owned": false
+  }
+]

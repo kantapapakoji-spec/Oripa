@@ -1,0 +1,2 @@
+Marine Sweeper Heroine Collection
+再構築ハイクオリティ版。タイトル画像と19枚のご褒美画像を組み込み済み。index.htmlを開いて遊べます。スマホはホーム画面に追加できます。
