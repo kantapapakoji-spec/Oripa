@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1ee8ff"/><stop offset=".5" stop-color="#ff4db8"/><stop offset="1" stop-color="#fff19a"/></linearGradient></defs>
-<rect width="1024" height="1024" rx="220" fill="#101442"/><circle cx="512" cy="450" r="310" fill="url(#g)" opacity=".95"/>
-<text x="512" y="430" text-anchor="middle" font-size="130" font-weight="900" fill="white" stroke="#641287" stroke-width="18" font-family="sans-serif">PIXEL</text>
-<text x="512" y="560" text-anchor="middle" font-size="116" font-weight="900" fill="#fff19a" stroke="#641287" stroke-width="14" font-family="sans-serif">SUMMER</text>
-<text x="512" y="690" text-anchor="middle" font-size="86" font-weight="900" fill="white" font-family="sans-serif">STORY</text></svg>
