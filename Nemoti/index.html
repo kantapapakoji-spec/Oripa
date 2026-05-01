@@ -1,1 +1,1571 @@
-ok
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>ねこっち100 プレミアム完成版</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#ffd8ed;font-family:"Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif;color:#68415d}
+button{font:inherit;border:0;cursor:pointer;touch-action:manipulation;user-select:none}
+#app{width:390px;height:100dvh;min-height:844px;margin:0 auto;background:#fff6fb;position:relative;overflow:hidden;box-shadow:0 0 0 8px #ffb5d8,0 18px 48px rgba(255,90,165,.25)}
+.screen{position:absolute;inset:0;display:none;overflow:hidden;background:radial-gradient(circle at 20% 10%,rgba(255,255,255,.9),transparent 20%),linear-gradient(#fff4fb,#ffe0ef)}
+.screen.active{display:block}
+
+/* title */
+.title-bg{position:absolute;inset:0;padding:26px 18px;background:radial-gradient(circle at 50% 11%,#fff 0 9%,transparent 28%),linear-gradient(#ffe3f3,#fff5bf 58%,#ffd5eb)}
+.ribbon{width:176px;margin:0 auto;text-align:center;background:#fff;border-radius:999px;padding:7px 10px;color:#ff5fa9;font-weight:1000;box-shadow:0 5px 0 #ffc1de}
+.logo{text-align:center;margin:14px 0 8px;filter:drop-shadow(0 7px 0 #ffafd4)}
+.logo span,.logo b{display:inline-flex;align-items:center;justify-content:center;width:52px;height:60px;margin:0 1px;border-radius:18px;background:linear-gradient(#fff,#fff1fa);border:4px solid #ff8fc4;color:#ff4fa0;font-size:43px;font-weight:1000;box-shadow:inset 0 5px 0 rgba(255,255,255,.95)}
+.logo b{width:94px;background:#fff3a7;color:#8b61ff;font-size:39px}
+.title-card{height:322px;margin:12px 0;border:6px solid #fff;border-radius:34px;background:linear-gradient(#d9f8ff 0 42%,#fff1bc 42%);box-shadow:0 10px 0 #ffa8d0;position:relative;overflow:hidden}
+.title-window{position:absolute;left:74px;top:20px;width:206px;height:108px;background:linear-gradient(#8ee7ff,#eaffff);border:8px solid #fff;border-radius:26px}
+.title-window:before{content:"";position:absolute;left:50%;top:0;width:8px;height:100%;background:#fff}.title-window:after{content:"";position:absolute;left:0;top:50%;width:100%;height:8px;background:#fff}
+.title-menu{position:absolute;left:18px;right:18px;bottom:20px;display:grid;grid-template-columns:1fr 1fr;gap:8px;z-index:5}
+.title-menu button{height:56px;border-radius:18px;background:#fff;border:4px solid #ff8fc4;color:#ff4fa0;font-size:22px;font-weight:1000;box-shadow:0 6px 0 #ffafd2}
+.title-menu .primary{grid-column:1/3;background:#ff70b3;color:#fff;border-color:#fff;font-size:26px}
+
+/* cat select */
+.cat-select-area{position:absolute;left:14px;right:14px;top:22px;bottom:18px;display:flex;flex-direction:column;gap:10px}
+.select-title{text-align:center;margin:0;color:#ff4fa0;font-size:32px;text-shadow:0 4px #fff;font-weight:1000}
+.select-lead{text-align:center;margin:0;color:#8a5a75;font-weight:900}
+.cat-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;min-height:0}
+.cat-choice{border:5px solid #ffadd2;background:linear-gradient(#fff,#fff5fb);border-radius:22px;box-shadow:0 6px 0 #ffc2de;color:#6b3c5a;font-weight:1000;font-size:17px;padding:6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;overflow:hidden}
+.cat-choice:active{transform:translateY(5px);box-shadow:0 1px 0 #ffc2de}
+.mini-cat{position:relative;width:86px;height:70px}.mini-cat:before{content:"";position:absolute;left:12px;top:14px;width:62px;height:52px;border-radius:50%;background:var(--fur,#ffc06b);border:4px solid #6b3c5a}.mini-cat:after{content:"";position:absolute;left:29px;top:39px;width:8px;height:6px;border-radius:50%;background:#ff6d9f;box-shadow:-15px -10px 0 1px #422139,15px -10px 0 1px #422139}.mini-ear{position:absolute;top:3px;width:28px;height:28px;background:var(--fur,#ffc06b);border:4px solid #6b3c5a;border-radius:9px;transform:rotate(45deg)}.mini-ear.l{left:14px}.mini-ear.r{right:14px}.white{--fur:#fff7ef}.black{--fur:#3a2d38}.kiji{--fur:#c78b52}.shamu{--fur:#ead7b0}.mike{--fur:#fff3dc}.persian{--fur:#f7e6d5}
+
+/* HUD */
+.hud{height:90px;display:grid;grid-template-columns:68px 1fr 48px;gap:8px;padding:8px 10px;background:#ffe1f0;border-bottom:5px solid #fff;position:relative;z-index:30}
+.day,.stats{background:#fff;border:3px solid #ff9bcc;border-radius:18px;box-shadow:0 4px 0 #ffc2de}
+.day{display:flex;flex-direction:column;align-items:center;justify-content:center}.day small{font-weight:1000;color:#ff62aa}.day b{font-size:24px;color:#8158ed}
+.stats{padding:6px 10px}.stats p{height:25px;margin:0;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:1000}.stats b{color:#ff4f99;letter-spacing:-2px}.stats b.low{color:#7d55e9;animation:blink .45s infinite alternate}@keyframes blink{to{transform:scale(1.1)}}
+.help{width:48px;height:48px;border-radius:50%;align-self:center;background:#956fff;color:#fff;font-size:28px;font-weight:1000;box-shadow:0 5px 0 #6748d0}
+
+/* room bottom fixed */
+.room{position:absolute;left:0;right:0;top:90px;bottom:260px;overflow:hidden;background:radial-gradient(circle at 50% 12%,rgba(255,255,255,.55),transparent 24%),linear-gradient(#ffe8f4 0 58%,#ffd195 58%)}
+.room:after{content:"";position:absolute;left:-80px;top:120px;width:560px;height:180px;background:linear-gradient(110deg,transparent 0 35%,rgba(255,255,255,.24) 45%,transparent 58%);transform:rotate(-8deg);animation:roomLight 8s infinite ease-in-out;pointer-events:none;z-index:3}@keyframes roomLight{50%{transform:translateX(35px) rotate(-8deg);opacity:.45}}
+.window{position:absolute;left:108px;top:18px;width:174px;height:110px;border:8px solid #fff;background:#9de9ff;border-radius:22px;box-shadow:0 5px 0 #ffc5df;z-index:2}.window:before{content:"";position:absolute;left:50%;top:0;width:7px;height:100%;background:#fff}.window:after{content:"";position:absolute;left:0;top:50%;height:7px;width:100%;background:#fff}
+.heart{position:absolute;width:28px;height:28px;background:#ff9dcc;transform:rotate(45deg);border-radius:8px}.h1{left:38px;top:68px}.h2{right:32px;top:150px;background:#ffd05f}
+.floor{position:absolute;left:0;right:0;bottom:0;height:215px;background:repeating-linear-gradient(90deg,#ffc178 0 38px,#ffb96a 38px 76px)}
+.sofa{position:absolute;left:20px;bottom:86px;width:138px;height:72px;background:linear-gradient(#ffadd7,#ff7ec0);border:5px solid #fff;border-radius:30px;box-shadow:0 8px 0 #d96ba5;z-index:4}
+.tower{position:absolute;right:18px;bottom:90px;width:74px;height:150px;background:linear-gradient(#d99b68,#bf794c);border:5px solid #fff;border-radius:18px;z-index:4}.tower:before{content:"";position:absolute;left:-24px;top:18px;width:74px;height:35px;background:#ffe08d;border:5px solid #fff;border-radius:999px}
+.rug{position:absolute;left:96px;bottom:28px;width:198px;height:68px;background:radial-gradient(#fff,#fff4a8);border:5px solid #ff9fca;border-radius:50%;z-index:4}
+.bowl{position:absolute;left:36px;bottom:28px;width:58px;height:28px;background:#fff;border:5px solid #6b3c5a;border-radius:0 0 40px 40px;z-index:7}
+.poo{display:none;position:absolute;right:106px;bottom:40px;width:40px;height:30px;background:#8c5a32;border-radius:50% 50% 38% 38%;border:4px solid #6b3c5a;z-index:8}.poo.show{display:block}
+
+/* cat */
+.cat{position:absolute;width:128px;height:138px;z-index:20;pointer-events:auto;transition:left .9s ease,top .9s ease,transform .25s ease;animation:breathe 2.8s infinite ease-in-out;filter:drop-shadow(0 10px 7px rgba(100,55,80,.18))}
+.title-cat{left:116px;top:148px;transform:scale(1.22);animation:titleFloat 2.6s infinite ease-in-out}.in-room{left:138px;top:290px}
+@keyframes breathe{50%{transform:translateY(-2px) scale(1.015)}}@keyframes titleFloat{50%{transform:translateY(-8px) scale(1.25)}}
+.ear{position:absolute;top:7px;width:44px;height:44px;background:linear-gradient(#ffd08a,#ffad5f);border:5px solid #6b3c5a;border-radius:14px;transform:rotate(45deg);z-index:2;animation:ear 3s infinite}.ear.left{left:18px}.ear.right{right:18px;animation-delay:.35s}@keyframes ear{0%,88%,100%{transform:rotate(45deg)}91%{transform:rotate(35deg)}94%{transform:rotate(52deg)}}
+.head{position:absolute;left:8px;top:24px;width:112px;height:92px;background:radial-gradient(circle at 34% 22%,rgba(255,255,255,.72) 0 12%,transparent 22%),linear-gradient(#ffd48d,#ffc06b 62%,#f2a258);border:5px solid #6b3c5a;border-radius:50% 50% 46% 46%;z-index:4}.eye{position:absolute;top:34px;width:15px;height:20px;background:#422139;border-radius:50%;box-shadow:inset 4px 3px 0 rgba(255,255,255,.7);animation:blinkEye 4.5s infinite ease-in-out}.eye.left{left:30px}.eye.right{right:30px}@keyframes blinkEye{0%,86%,100%{transform:scaleY(1)}90%,94%{transform:scaleY(.08)}}.sleep-eye{display:none;position:absolute;top:39px;width:22px;height:8px;border-bottom:4px solid #422139;border-radius:50%}.sleep-eye.left{left:27px}.sleep-eye.right{right:27px}.brow{display:none;position:absolute;top:27px;width:20px;height:6px;background:#422139;border-radius:99px}.brow.left{left:25px;transform:rotate(20deg)}.brow.right{right:25px;transform:rotate(-20deg)}.nose{position:absolute;left:49px;top:54px;width:14px;height:10px;background:#ff6d9f;border-radius:50%}.mouth{position:absolute;left:45px;top:66px;width:24px;height:11px;border-bottom:4px solid #6b3c5a;border-radius:0 0 20px 20px}.cheek{position:absolute;top:56px;width:17px;height:10px;background:#ff8fb8;border-radius:50%;opacity:.85;animation:cheek 2.8s infinite}.cheek.left{left:14px}.cheek.right{right:14px}@keyframes cheek{50%{opacity:1;transform:scale(1.12)}}.body{position:absolute;left:29px;top:96px;width:70px;height:52px;background:linear-gradient(#ffc878,#efa35a);border:5px solid #6b3c5a;border-radius:35px 35px 23px 23px;z-index:2}.tail{position:absolute;right:-18px;top:88px;width:52px;height:26px;border:8px solid #6b3c5a;border-left:0;border-radius:0 999px 999px 0;z-index:1;transform-origin:left center;animation:tail 2.4s infinite ease-in-out}@keyframes tail{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(18deg)}}.paw{position:absolute;top:129px;width:23px;height:15px;background:#ffe0a4;border:4px solid #6b3c5a;border-radius:50%;z-index:5}.p1{left:39px}.p2{right:39px}.halo{display:none;position:absolute;left:35px;top:-11px;width:60px;height:20px;border:6px solid #ffeb67;border-radius:50%;z-index:8}.aura{display:none;position:absolute;left:-18px;top:-12px;width:164px;height:164px;border-radius:50%;background:radial-gradient(rgba(255,245,120,.35),transparent 65%);z-index:0;animation:pulse 1.6s infinite}@keyframes pulse{50%{transform:scale(1.12)}}.horns{display:none}.horns i{position:absolute;top:0;width:28px;height:34px;background:#8b38ff;border:4px solid #4a263b;border-radius:50% 50% 0 0;z-index:9}.horns i:first-child{left:24px;transform:rotate(-18deg)}.horns i:last-child{right:24px;transform:rotate(18deg)}.crown{display:none;position:absolute;left:39px;top:-12px;width:50px;height:30px;background:#ffd84a;clip-path:polygon(0 100%,0 38%,25% 74%,50% 8%,75% 74%,100% 38%,100% 100%);z-index:10;filter:drop-shadow(0 3px #b48500)}.zzz{display:none;position:absolute;right:-25px;top:-8px;color:#7b61ff;font-weight:1000;font-size:22px;z-index:20;animation:zzz 1.2s infinite}@keyframes zzz{50%{transform:translateY(-10px);opacity:.55}}
+.cat.melt{animation:melt .9s ease-in-out}.cat.melt .head{transform:scaleX(1.12) scaleY(.9);top:31px}.cat.melt .cheek{transform:scale(1.35);opacity:1}@keyframes melt{30%{transform:translateY(10px) scale(1.08,.9)}60%{transform:translateY(-4px) scale(.96,1.05)}}.cat.grumpy .brow{display:block}.cat.grumpy .mouth{border-bottom:0;border-top:4px solid #6b3c5a;top:72px}.cat.grumpy .eye{height:12px;top:38px}.cat.sleeping .eye{display:none}.cat.sleeping .sleep-eye{display:block}.cat.sleeping .zzz{display:block}.cat.angel .halo,.cat.angel .aura{display:block;filter:drop-shadow(0 0 10px gold)}.cat.angel .head,.cat.angel .body,.cat.angel .ear{background:linear-gradient(#fff6b6,#ffe28b)}.cat.devil .horns,.cat.devil .aura{display:block;filter:drop-shadow(0 0 10px purple)}.cat.devil .aura{background:radial-gradient(rgba(120,65,255,.28),transparent 65%)}.cat.devil .head,.cat.devil .body,.cat.devil .ear{background:linear-gradient(#c4a0ff,#9b76ef)}.cat.dressed .crown{display:block}.cat.jump{animation:jump .8s ease}@keyframes jump{45%{transform:translateY(-35px) scale(1.03)}}.cat.stretch{animation:stretch 1.25s ease}@keyframes stretch{20%{transform:scaleX(1.18) scaleY(.82) translateY(14px)}55%{transform:scaleX(.92) scaleY(1.1) translateY(-8px)}}.cat.look-left .eye{margin-left:-3px}.cat.look-right .eye{margin-left:3px}.cat.look-up .eye{margin-top:-3px}
+.cat.white .head,.cat.white .body,.cat.white .ear{background:linear-gradient(#fffaf3,#f3efe7)}.cat.black .head,.cat.black .body,.cat.black .ear{background:linear-gradient(#4a3a47,#2b232b)}.cat.black .eye{background:#ffe56a}.cat.kiji .head,.cat.kiji .body,.cat.kiji .ear{background:linear-gradient(#d49a5e,#b9793f)}.cat.kiji .head:after{content:"";position:absolute;left:35px;top:3px;width:8px;height:34px;border-radius:99px;background:rgba(80,45,30,.35);box-shadow:-16px 8px 0 rgba(80,45,30,.22),16px 8px 0 rgba(80,45,30,.22)}.cat.shamu .head,.cat.shamu .body,.cat.shamu .ear{background:linear-gradient(#ecd9b5,#d7bd91)}.cat.shamu .head{box-shadow:inset 0 -22px 0 rgba(82,60,55,.35)}.cat.mike .head,.cat.mike .body,.cat.mike .ear{background:linear-gradient(#fff3dc,#f2d3a3)}.cat.mike .head:after{content:"";position:absolute;left:18px;top:0;width:28px;height:30px;border-radius:50%;background:#d17a45;box-shadow:48px 4px 0 #3a2d38;opacity:.95}.cat.persian .head,.cat.persian .body,.cat.persian .ear{background:linear-gradient(#fff7ea,#ead5c3)}.cat.persian .head{box-shadow:inset 0 0 20px rgba(255,255,255,.8),0 0 0 4px rgba(255,255,255,.35)}
+
+/* UI raised */
+.ui-zone{position:absolute;left:0;right:0;bottom:40px;height:200px;background:#ffe0ef;border-top:6px solid #fff;z-index:60;padding:7px 8px 9px;pointer-events:auto;border-radius:22px 22px 0 0;box-shadow:0 -6px 22px rgba(255,135,190,.24)}
+.grid{height:100%;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(2,1fr);gap:5px}
+.grid button{min-width:0;border-radius:16px;background:linear-gradient(#fff,#ffeaf4);border:3px solid #ff89bf;color:#ff4fa0;font-weight:1000;font-size:14px;box-shadow:0 5px 0 #ffafd2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative;overflow:hidden}.grid button svg{width:28px;height:28px;display:block}.grid button:active{transform:translateY(5px) scale(.985);box-shadow:0 1px 0 #ffafd2}
+.speech{position:absolute;left:205px;top:255px;z-index:25;padding:8px 13px;border-radius:18px;background:#fff;border:4px solid #ff9aca;color:#ff5ba8;font-weight:1000;opacity:0;transform:scale(.85);transition:.2s;box-shadow:0 7px 0 #ffd0e6;max-width:170px}.speech.show{opacity:1;transform:scale(1)}
+.comment-box{position:absolute;left:12px;right:12px;bottom:8px;z-index:25;background:rgba(255,255,255,.92);border:4px solid #ffc0dd;border-radius:18px;padding:7px 10px;font-size:13px;font-weight:900;color:#8a5a75;box-shadow:0 5px 0 rgba(255,180,215,.6)}
+.fx{position:absolute;inset:0;pointer-events:none;z-index:70}.fx:after{content:attr(data-text);position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);font-size:39px;font-weight:1000;color:#ff4fa0;text-shadow:0 4px #fff;opacity:0}.fx.pop:after{animation:pop .9s}.fx.bad:after{color:#7049d8}@keyframes pop{0%{opacity:0;transform:translate(-50%,-20%) scale(.5)}30%{opacity:1}100%{opacity:0;transform:translate(-50%,-75%) scale(1.25)}}.sparkles{position:absolute;inset:0;z-index:95;pointer-events:none}.sparkle{position:absolute;width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,155,205,.55),0 0 14px rgba(255,255,255,.9);animation:sparkle .8s ease-out forwards}@keyframes sparkle{0%{opacity:0;transform:translate(0,0) scale(.3)}30%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.2)}}.drag{display:none;position:absolute;left:25px;top:360px;width:82px;height:62px;border-radius:24px;background:#fff;border:5px solid #ff8fc4;z-index:100;align-items:center;justify-content:center;color:#ff4fa0;font-weight:1000;box-shadow:0 5px 0 #ffc3dc;touch-action:none}.drag.active{display:flex}.drag svg{width:46px;height:46px}
+
+/* sub */
+.sub{padding:14px}.sub-head{height:60px;display:grid;grid-template-columns:54px 1fr 54px;align-items:center}.sub-head button{width:52px;height:52px;border-radius:16px;background:#fff;border:4px solid #ff91c4;color:#ff5aa7;font-size:28px;font-weight:1000}.sub-head h2{text-align:center;margin:0;font-size:29px;color:#ff5aa7;text-shadow:0 3px #fff}.card,.panel,.ending{background:radial-gradient(circle at 18% 10%,rgba(255,255,255,.95),transparent 24%),linear-gradient(#fff,#fff7fb);border:5px solid #ffadd2;border-radius:26px;padding:16px;margin-top:12px;box-shadow:0 7px 0 #ffc3dc}.card h3{margin:0 0 8px;color:#ff4fa0;font-size:23px}.card p{font-weight:900;line-height:1.5}
+.mission-list{height:758px;overflow:auto;display:grid;gap:7px;padding-bottom:16px}.mission{height:54px;background:#fff;border:3px solid #ffc1dc;border-radius:16px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:14px;font-weight:900}.mission.done{background:#e8ffe8}.mission.gold{border-color:#ffc34f;background:#fff8d7}.mission.rare{border-color:#a788ff;background:#f3efff}.mission input{width:24px;height:24px;accent-color:#ff65ad}.mission span{background:#ffe28f;border-radius:999px;padding:4px 8px;color:#8b5a00}
+.big{height:62px;border-radius:20px;background:#ff66ad;color:#fff;font-size:26px;font-weight:1000;border:5px solid #fff;box-shadow:0 6px 0 #d95293;padding:0 28px;position:relative}
+
+/* premium image-like cards */
+.event{display:none;position:absolute;inset:0;background:rgba(80,40,90,.42);z-index:120;align-items:center;justify-content:center}.event.show{display:flex}.event-card{width:342px;background:#fff;border:6px solid #ffadd2;border-radius:30px;padding:14px;text-align:center;box-shadow:0 10px 0 #d16eaa}.event-time{position:absolute;margin-left:260px;margin-top:-30px;width:62px;height:62px;border-radius:50%;background:#8b61ff;color:#fff;font-size:32px;font-weight:1000;display:flex;align-items:center;justify-content:center;border:5px solid #fff}.event-img{height:180px;border-radius:24px;border:5px solid #fff;box-shadow:inset 0 0 0 5px rgba(255,255,255,.35);position:relative;overflow:hidden}.event-img:before{content:"";position:absolute;inset:0;background:var(--event-bg,linear-gradient(135deg,#c8f6ff,#fff0a8))}.event-img:after{content:"";background:radial-gradient(circle,#fff,#ffd0f0);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:76px;filter:drop-shadow(0 5px 0 rgba(255,255,255,.8))}.event-card h2{margin:8px 0 4px;color:#ff4fa0}.event-card p{font-weight:1000}.event-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.event-btns button{height:60px;border-radius:20px;font-size:26px;font-weight:1000;color:#fff;border:5px solid #fff;box-shadow:0 6px 0 rgba(0,0,0,.18)}#yesBtn{background:#ff65ad}#noBtn{background:#8b61ff}
+
+.gacha-stage{position:relative;width:318px;height:292px;margin:0 auto 8px;border-radius:34px;background:radial-gradient(circle at 50% 44%,#fff 0 18%,#ffe0f1 38%,#ffd0e9 70%,#ff9ac7 100%);border:7px solid #fff;box-shadow:0 10px 0 #ff99c8;overflow:hidden}.gacha-stage:before{content:"";position:absolute;inset:-80px;background:conic-gradient(transparent,#fff9a6,transparent,#ffd0ff,transparent,#bdf7ff,transparent);opacity:.35;animation:spin 6s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.capsule{position:absolute;left:50%;top:50%;width:160px;height:160px;border-radius:50%;background:linear-gradient(90deg,#ff77b6 0 50%,#fff 50%);border:10px solid #ffcae1;box-shadow:0 10px 0 #ff9cc8;transform:translate(-50%,-42%);z-index:9}.capsule.roll{animation:roll .5s ease 4}@keyframes roll{25%{transform:translate(-50%,-42%) rotate(-16deg) scale(1.05)}75%{transform:translate(-50%,-42%) rotate(16deg) scale(1.05)}}.gtext{position:absolute;left:20px;right:20px;top:16px;z-index:10;height:40px;border-radius:999px;background:#fff;border:4px solid #ff8fc4;color:#ff4fa0;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:1000}.rarity{position:absolute;left:66px;right:66px;bottom:12px;z-index:12;height:42px;border-radius:999px;background:#fff;border:4px solid #ff8fc4;color:#8b61ff;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:1000}.result div{height:136px;border-radius:24px;background:linear-gradient(135deg,#fff0a7,#ff93cc);border:6px solid #fff;margin-top:10px;position:relative;overflow:hidden}.result div:after{content:attr(data-img);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:64px}.result h3{color:#ff4fa0;margin:8px 0 4px}.result p{font-weight:1000;margin:0}
+.mini{height:690px;position:relative;background:radial-gradient(circle at 50% 15%,rgba(255,255,255,.9),transparent 24%),linear-gradient(#e7fbff,#fff7c5);overflow:hidden}.mini:before{content:"";position:absolute;inset:80px 18px 18px;border-radius:28px;background:linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,.2));border:5px solid rgba(255,255,255,.7)}.mini-score,.mini-time{position:absolute;top:18px;background:#fff;border:4px solid #ff91c4;border-radius:16px;padding:8px 12px;font-weight:1000;z-index:2}.mini-score{left:18px}.mini-time{right:18px}.mini .big{position:absolute;left:96px;top:90px;z-index:3}.target{position:absolute;width:94px;height:94px;border-radius:50%;font-weight:1000;color:#fff;border:6px solid #fff;box-shadow:0 8px 0 rgba(100,60,90,.25);z-index:3}.target:before{display:block;font-size:40px;line-height:1}.target span{display:block;font-size:14px}.pawt{left:54px;top:220px;background:#ff78b8}.pawt:before{content:"";}.fisht{right:58px;top:390px;background:#6ccfff}.fisht:before{content:"";}.target.hit{animation:target .25s}@keyframes target{50%{transform:scale(1.25)}}
+
+.closet{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px;height:728px;overflow:auto}.closet-card{height:196px;border-radius:22px;background:#fff;border:5px solid #ffc0dc;padding:10px;text-align:center;box-shadow:0 6px 0 #ffc2df}.closet-card.deluxe{border-color:#ffd04d;background:#fff8d6}.closet-card .pic{height:98px;border-radius:18px;background:linear-gradient(135deg,#ffd3e8,#fff);margin-bottom:8px;position:relative;overflow:hidden}.closet-card .pic:after{content:attr(data-img);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:58px}.closet-card.deluxe .pic{background:linear-gradient(135deg,#fff1a3,#ff88c7)}.closet-card b{display:block;color:#ff4fa0}.closet-card span{font-weight:900;font-size:13px}.closet-card button{margin-top:5px;border-radius:12px;background:#ff66ad;color:#fff;font-weight:1000;padding:6px 12px}
+.ending{text-align:center;height:690px}.ending-cat{width:190px;height:190px;border-radius:40px;background:linear-gradient(#ffe5f3,#fff7bd);border:8px solid #fff;margin:34px auto 16px;box-shadow:0 8px 0 #ffc2df;position:relative}.ending-cat:before{content:"";position:absolute;left:44px;top:42px;width:86px;height:76px;border-radius:50%;background:#ffc06b;border:6px solid #6b3c5a}.ending h2{color:#ff4fa0}.ending p{font-weight:1000}.ending b{font-size:44px;color:#ff4fa0;text-shadow:0 3px #fff}.record-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 10px}.record-mini div{background:#fff7cf;border:4px solid #ffbadd;border-radius:18px;padding:8px 4px}.record-mini span{display:block;font-size:13px;font-weight:1000;color:#9d6b80}.record-mini b{display:block;font-size:20px;color:#ff4fa0;text-shadow:none}
+.badge{position:absolute;left:50%;top:116px;transform:translateX(-50%);z-index:85;min-width:190px;padding:10px 18px;border-radius:999px;background:#fff;border:5px solid #ff8fc4;color:#ff4fa0;font-weight:1000;text-align:center;box-shadow:0 6px 0 #ffc2de;opacity:0;pointer-events:none}.badge.show{animation:badge 1.25s ease}@keyframes badge{0%{opacity:0;transform:translate(-50%,20px) scale(.6)}25%,80%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-24px) scale(1)}}
+.dayflash{display:none}
+@media(max-width:389px){#app{width:100vw;height:100dvh}}
+
+.gacha-img{background-size:cover;background-position:center}
+.img-ribbon{background:linear-gradient(#ff9ac4,#ff66ad)}
+.img-crown{background:linear-gradient(#ffe066,#ffcc00)}
+.img-bear{background:linear-gradient(#d0a060,#8b5a2b)}
+.img-rabbit{background:linear-gradient(#fff,#ffd0f0)}
+.img-furniture{background:linear-gradient(#ffd0e0,#ff90c0)}
+.img-rainbow{background:linear-gradient(90deg,red,orange,yellow,green,blue,indigo,violet)}
+
+.prize-svg,.event-svg{width:100%;height:100%;display:block}
+.result div{display:flex;align-items:center;justify-content:center}
+.event-img{display:flex;align-items:center;justify-content:center;background:#fff}
+.event-img:before,.event-img:after{display:none!important}
+.result div:after{display:none!important}
+.closet-card .pic{display:flex;align-items:center;justify-content:center}
+.closet-card .pic:after{display:none!important}
+.visual-card-svg{width:100%;height:100%}
+.cat.angel .aura{display:block!important;background:radial-gradient(rgba(255,245,120,.55),rgba(255,230,90,.22),transparent 70%)!important;filter:drop-shadow(0 0 14px #ffe86c);animation:pulse 1.1s infinite}
+.cat.angel .halo{display:block!important;filter:drop-shadow(0 0 10px #fff27a)}
+.cat.devil .aura{display:block!important;background:radial-gradient(rgba(120,65,255,.38),rgba(70,35,160,.22),transparent 70%)!important;filter:drop-shadow(0 0 16px #7b4dff);animation:pulse .75s infinite}
+.cat.devil .horns{display:block!important;filter:drop-shadow(0 0 8px #7b4dff)}
+
+
+/* ===== v11 final app fixes: bottom buttons and cat tail ===== */
+
+/* Keep the app visible even in iPhone Safari with the bottom browser bar */
+#app{
+  height:100dvh !important;
+  min-height:844px !important;
+  overflow:hidden !important;
+}
+
+/* Make room end higher so buttons are not covering the cat/comment area */
+.room{
+  top:90px !important;
+  bottom:310px !important;
+}
+
+/* Move the bottom UI far above Safari's bottom bar and make every button visible */
+.ui-zone{
+  bottom:96px !important;
+  height:188px !important;
+  padding:7px 8px 9px !important;
+  border-radius:24px !important;
+  box-shadow:0 -6px 24px rgba(255,135,190,.28) !important;
+}
+
+/* Keep buttons compact but readable */
+.grid{
+  gap:5px !important;
+}
+.grid button{
+  font-size:13px !important;
+  min-height:0 !important;
+  padding:2px 0 !important;
+}
+.grid button svg{
+  width:27px !important;
+  height:27px !important;
+}
+
+/* Comment box stays above UI and remains readable */
+.comment-box{
+  bottom:12px !important;
+  font-size:12px !important;
+  padding:6px 9px !important;
+}
+
+/* Cat is slightly higher to avoid being cut by the room edge */
+.in-room{
+  top:245px !important;
+}
+
+/* Tail should grow from lower back / butt area, not from the head side */
+.tail{
+  right:-20px !important;
+  top:112px !important;
+  width:54px !important;
+  height:24px !important;
+  transform-origin:left center !important;
+  z-index:1 !important;
+}
+
+/* Body stays above the base of the tail */
+.body{
+  z-index:3 !important;
+}
+
+/* During movement animations, preserve the lower-tail look */
+.cat .tail{
+  top:112px !important;
+}
+
+/* Badge position adjusted for smaller play area */
+.badge{
+  top:100px !important;
+}
+
+/* In very short Safari viewport, lift controls even more */
+@media (max-height: 820px){
+  .ui-zone{
+    bottom:110px !important;
+    height:182px !important;
+  }
+  .room{
+    bottom:320px !important;
+  }
+  .grid button svg{
+    width:25px !important;
+    height:25px !important;
+  }
+  .grid button{
+    font-size:12px !important;
+  }
+}
+
+/* In standalone / home-screen mode, use less bottom lift */
+@media all and (display-mode: standalone){
+  .ui-zone{
+    bottom:34px !important;
+  }
+  .room{
+    bottom:240px !important;
+  }
+}
+
+
+/* ===== v12 fixes: title buttons, closet images, comment position ===== */
+
+/* Title buttons were hidden by the Safari bottom bar. Lift the whole title menu. */
+.title-menu{
+  bottom:118px !important;
+}
+.title-card{
+  height:300px !important;
+  margin:10px 0 8px !important;
+}
+.title-cat{
+  top:134px !important;
+}
+
+/* Keep all game buttons visible but not too high */
+.ui-zone{
+  bottom:86px !important;
+  height:188px !important;
+}
+
+/* Main room leaves space for the raised UI */
+.room{
+  top:90px !important;
+  bottom:292px !important;
+}
+
+/* Move comment/hint lower, right above the bottom button panel */
+.comment-box{
+  position:fixed !important;
+  left:calc(50% - 176px) !important;
+  right:calc(50% - 176px) !important;
+  bottom:282px !important;
+  z-index:80 !important;
+  font-size:12px !important;
+  padding:7px 10px !important;
+  max-height:48px !important;
+  overflow:hidden !important;
+}
+
+/* Furniture / costume cards: show real SVG illustrations instead of empty panels */
+.closet-card .pic{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  background:linear-gradient(135deg,#fff7fb,#ffe2f2) !important;
+  overflow:hidden !important;
+}
+.closet-card.deluxe .pic{
+  background:linear-gradient(135deg,#fff1a3,#ff88c7) !important;
+}
+.closet-svg{
+  width:100% !important;
+  height:100% !important;
+  display:block !important;
+}
+
+/* Cat tail: lower butt position */
+.tail{
+  top:114px !important;
+  right:-20px !important;
+  width:54px !important;
+  height:24px !important;
+  transform-origin:left center !important;
+}
+.body{
+  z-index:3 !important;
+}
+
+/* Short viewport fallback */
+@media(max-height:820px){
+  .title-menu{
+    bottom:128px !important;
+  }
+  .ui-zone{
+    bottom:96px !important;
+  }
+  .comment-box{
+    bottom:292px !important;
+  }
+}
+@media all and (display-mode: standalone){
+  .title-menu{
+    bottom:42px !important;
+  }
+  .ui-zone{
+    bottom:28px !important;
+  }
+  .room{
+    bottom:228px !important;
+  }
+  .comment-box{
+    bottom:218px !important;
+  }
+}
+
+
+/* ===== v13 fixes: mini game shapes and hint position ===== */
+
+/* Move hint/comment lower, around below the bowl area and just above the button panel */
+.comment-box{
+  position:absolute !important;
+  left:18px !important;
+  right:18px !important;
+  bottom:-14px !important;
+  z-index:82 !important;
+  font-size:12px !important;
+  line-height:1.25 !important;
+  padding:7px 10px !important;
+  max-height:48px !important;
+  overflow:hidden !important;
+}
+
+/* Keep UI visible, and allow the comment to sit immediately above it */
+.room{
+  bottom:292px !important;
+}
+.ui-zone{
+  bottom:86px !important;
+}
+
+/* Mini game targets are no longer round buttons */
+.target{
+  border:0 !important;
+  box-shadow:none !important;
+  background:transparent !important;
+  border-radius:0 !important;
+  width:118px !important;
+  height:96px !important;
+  padding:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.target svg{
+  width:100% !important;
+  height:100% !important;
+  display:block !important;
+  filter:drop-shadow(0 9px 0 rgba(90,60,75,.20));
+}
+.target:before{
+  display:none !important;
+  content:"" !important;
+}
+.target span{
+  display:none !important;
+}
+.pawt{
+  background:transparent !important;
+}
+.fisht{
+  background:transparent !important;
+}
+
+/* Hit animation still works with image shapes */
+.target.hit{
+  animation:targetShapePop .25s ease !important;
+}
+@keyframes targetShapePop{
+  50%{transform:scale(1.22) rotate(-4deg)}
+}
+
+/* Make mini panel a little cleaner after removing round targets */
+.mini{
+  background:
+    radial-gradient(circle at 50% 16%,rgba(255,255,255,.95),transparent 24%),
+    linear-gradient(#e7fbff,#fff7c5) !important;
+}
+
+
+/* ===== v14 fixes: cat select screen + hint visibility ===== */
+
+/* Cat select screen: compress and move everything upward so all 6 cats show */
+.cat-select-area{
+  top:10px !important;
+  bottom:108px !important;
+  gap:6px !important;
+}
+.select-title{
+  font-size:30px !important;
+  margin:0 !important;
+  line-height:1.15 !important;
+}
+.select-lead{
+  font-size:15px !important;
+  margin:0 !important;
+  line-height:1.2 !important;
+}
+.cat-choice-grid{
+  gap:6px !important;
+  grid-template-rows:repeat(3,1fr) !important;
+}
+.cat-choice{
+  min-height:0 !important;
+  padding:3px 2px !important;
+  border-width:4px !important;
+  border-radius:18px !important;
+  box-shadow:0 4px 0 #ffc2de !important;
+}
+.mini-cat{
+  width:72px !important;
+  height:55px !important;
+  transform:scale(.88) !important;
+  transform-origin:center center !important;
+}
+.cat-choice span{
+  font-size:15px !important;
+  line-height:1.05 !important;
+}
+
+/* On shorter iPhone Safari viewport, compress further */
+@media(max-height:820px){
+  .cat-select-area{
+    top:6px !important;
+    bottom:122px !important;
+    gap:4px !important;
+  }
+  .select-title{
+    font-size:27px !important;
+  }
+  .select-lead{
+    font-size:13px !important;
+  }
+  .cat-choice{
+    padding:2px !important;
+  }
+  .mini-cat{
+    transform:scale(.78) !important;
+  }
+  .cat-choice span{
+    font-size:14px !important;
+  }
+}
+
+/* Hint/comment: place it fully above the button panel, never hidden by the UI */
+.comment-box{
+  position:absolute !important;
+  left:18px !important;
+  right:18px !important;
+  bottom:18px !important;
+  z-index:84 !important;
+  font-size:12px !important;
+  line-height:1.28 !important;
+  padding:7px 10px !important;
+  max-height:50px !important;
+  overflow:hidden !important;
+}
+
+/* Create enough room above buttons for the comment */
+.room{
+  bottom:318px !important;
+}
+.ui-zone{
+  bottom:86px !important;
+  height:188px !important;
+}
+
+/* Ensure cat does not sit on top of the hint too much */
+.in-room{
+  top:218px !important;
+}
+
+/* Safari short viewport fallback */
+@media(max-height:820px){
+  .room{
+    bottom:330px !important;
+  }
+  .comment-box{
+    bottom:20px !important;
+    font-size:11.5px !important;
+    max-height:48px !important;
+  }
+  .in-room{
+    top:205px !important;
+  }
+}
+
+/* Home screen standalone can use lower UI */
+@media all and (display-mode: standalone){
+  .cat-select-area{
+    bottom:24px !important;
+  }
+  .room{
+    bottom:245px !important;
+  }
+  .ui-zone{
+    bottom:28px !important;
+  }
+  .comment-box{
+    bottom:12px !important;
+  }
+}
+
+
+/* ===== v15 fixes: cat select overlap + comment between carpet and buttons ===== */
+
+/* Cat select: keep all 6 cards visible, make cats bigger, separate image and text */
+.cat-select-area{
+  top:8px !important;
+  bottom:106px !important;
+  gap:5px !important;
+}
+.select-title{
+  font-size:29px !important;
+  line-height:1.08 !important;
+  margin:0 !important;
+}
+.select-lead{
+  font-size:13px !important;
+  line-height:1.05 !important;
+  margin:0 0 2px !important;
+}
+.cat-choice-grid{
+  gap:6px !important;
+  grid-template-rows:repeat(3,1fr) !important;
+}
+.cat-choice{
+  padding:4px 2px 8px !important;
+  border-width:4px !important;
+  border-radius:18px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:8px !important;
+  min-height:0 !important;
+}
+.mini-cat{
+  width:88px !important;
+  height:72px !important;
+  transform:scale(.95) !important;
+  transform-origin:center center !important;
+  flex:0 0 auto !important;
+  margin-top:2px !important;
+}
+.cat-choice span{
+  display:block !important;
+  position:relative !important;
+  z-index:5 !important;
+  font-size:16px !important;
+  line-height:1.05 !important;
+  margin-top:0 !important;
+  padding-top:0 !important;
+  background:rgba(255,255,255,.82) !important;
+  border-radius:999px !important;
+  padding:2px 10px !important;
+}
+
+/* Short viewport: slightly reduce, but keep no overlap */
+@media(max-height:820px){
+  .cat-select-area{
+    top:5px !important;
+    bottom:122px !important;
+    gap:4px !important;
+  }
+  .select-title{
+    font-size:26px !important;
+  }
+  .select-lead{
+    font-size:12px !important;
+  }
+  .cat-choice{
+    gap:5px !important;
+    padding:3px 2px 6px !important;
+  }
+  .mini-cat{
+    width:82px !important;
+    height:66px !important;
+    transform:scale(.88) !important;
+  }
+  .cat-choice span{
+    font-size:14px !important;
+    padding:1px 8px !important;
+  }
+}
+
+/* Comment/hint: move to the gap between carpet and bottom button panel */
+.comment-box{
+  position:absolute !important;
+  left:22px !important;
+  right:22px !important;
+  bottom:-82px !important;
+  z-index:86 !important;
+  font-size:12px !important;
+  line-height:1.25 !important;
+  padding:7px 10px !important;
+  max-height:46px !important;
+  overflow:hidden !important;
+  background:rgba(255,255,255,.96) !important;
+}
+
+/* Make a clear gap between room/carpet and buttons */
+.room{
+  bottom:330px !important;
+}
+.ui-zone{
+  bottom:86px !important;
+  height:188px !important;
+}
+
+/* Move cat slightly up so it does not cover comment area */
+.in-room{
+  top:202px !important;
+}
+
+/* Short viewport fallback */
+@media(max-height:820px){
+  .room{
+    bottom:342px !important;
+  }
+  .comment-box{
+    bottom:-86px !important;
+    font-size:11.5px !important;
+    max-height:44px !important;
+  }
+  .in-room{
+    top:190px !important;
+  }
+}
+
+/* Standalone home screen mode */
+@media all and (display-mode: standalone){
+  .cat-select-area{
+    bottom:24px !important;
+  }
+  .room{
+    bottom:250px !important;
+  }
+  .ui-zone{
+    bottom:28px !important;
+  }
+  .comment-box{
+    bottom:-70px !important;
+  }
+}
+
+
+/* ===== v16 comment position (bubble above buttons center) ===== */
+
+.comment-box{
+  position:absolute !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  bottom:190px !important;
+  width:82% !important;
+  max-width:340px !important;
+  z-index:90 !important;
+  font-size:13px !important;
+  padding:10px 14px !important;
+  border-radius:999px !important;
+  background:#fff !important;
+  box-shadow:0 6px 0 #ffc2de !important;
+  text-align:center !important;
+}
+
+.comment-box:after{
+  content:"";
+  position:absolute;
+  bottom:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  border-width:10px 10px 0 10px;
+  border-style:solid;
+  border-color:#fff transparent transparent transparent;
+}
+
+.room{
+  bottom:330px !important;
+}
+
+@media(max-height:820px){
+  .comment-box{
+    bottom:200px !important;
+    font-size:12px !important;
+  }
+}
+
+
+/* ===== v17 emotion comment icons ===== */
+.comment-box{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  white-space:nowrap !important;
+}
+.comment-box .emo{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  border:3px solid #6b3c5a;
+  background:#fff7c7;
+  box-shadow:0 3px 0 rgba(120,70,100,.18);
+  position:relative;
+}
+.comment-box .emo:before{
+  content:"";
+  position:absolute;
+  left:7px;
+  top:8px;
+  width:4px;
+  height:6px;
+  background:#422139;
+  border-radius:50%;
+  box-shadow:8px 0 0 #422139;
+}
+.comment-box .emo:after{
+  content:"";
+  position:absolute;
+  left:8px;
+  bottom:6px;
+  width:12px;
+  height:6px;
+  border-bottom:3px solid #422139;
+  border-radius:0 0 12px 12px;
+}
+.comment-box.happy .emo{background:#fff7c7}
+.comment-box.warn .emo{background:#ffe1f0}
+.comment-box.warn .emo:after{
+  border-bottom:0;
+  border-top:3px solid #422139;
+  bottom:5px;
+  border-radius:12px 12px 0 0;
+}
+.comment-box.sleep .emo{background:#dff4ff}
+.comment-box.sleep .emo:before{
+  height:3px;
+  border-radius:999px;
+  top:10px;
+}
+.comment-box.angel .emo{
+  background:#fff9b8;
+  box-shadow:0 0 12px #fff27a;
+}
+.comment-box.angel .emo .halo-mini{
+  position:absolute;
+  top:-9px;
+  width:22px;
+  height:8px;
+  border:3px solid #ffd84a;
+  border-radius:50%;
+}
+.comment-box.devil .emo{
+  background:#c7afff;
+  box-shadow:0 0 12px #9a78ff;
+}
+.comment-box.devil .emo .horn-mini:before,
+.comment-box.devil .emo .horn-mini:after{
+  content:"";
+  position:absolute;
+  top:-8px;
+  width:10px;
+  height:13px;
+  background:#8b38ff;
+  border:3px solid #6b3c5a;
+  border-radius:50% 50% 0 0;
+}
+.comment-box.devil .emo .horn-mini:before{left:2px;transform:rotate(-20deg)}
+.comment-box.devil .emo .horn-mini:after{right:2px;transform:rotate(20deg)}
+.comment-text{
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+
+/* ===== v18 precise comment placement (between carpet and buttons) ===== */
+
+.comment-box{
+  position:absolute !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  bottom:235px !important;
+  width:84% !important;
+  max-width:360px !important;
+  z-index:95 !important;
+  font-size:13px !important;
+  padding:10px 14px !important;
+  border-radius:999px !important;
+  background:#fff !important;
+  box-shadow:0 6px 0 #ffc2de !important;
+  text-align:center !important;
+}
+
+.comment-box:after{
+  content:"";
+  position:absolute;
+  bottom:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  border-width:10px 10px 0 10px;
+  border-style:solid;
+  border-color:#fff transparent transparent transparent;
+}
+
+.room{
+  bottom:360px !important;
+}
+
+@media(max-height:820px){
+  .comment-box{
+    bottom:250px !important;
+    font-size:12px !important;
+  }
+}
+
+
+/* ===== v19 structural comment fix ===== */
+/* Comment is now inside .ui-zone, so it is always attached to the button panel.
+   No game functions are removed. This only fixes layout. */
+
+.ui-zone{
+  bottom:86px !important;
+  height:232px !important;
+  padding:8px 8px 9px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:8px !important;
+  overflow:visible !important;
+}
+
+/* The comment lives above the grid inside the UI area */
+.ui-zone .comment-box{
+  position:relative !important;
+  left:auto !important;
+  right:auto !important;
+  bottom:auto !important;
+  top:auto !important;
+  transform:none !important;
+  width:100% !important;
+  max-width:none !important;
+  height:48px !important;
+  flex:0 0 48px !important;
+  z-index:5 !important;
+  margin:0 !important;
+  padding:7px 12px !important;
+  border-radius:22px !important;
+  background:rgba(255,255,255,.96) !important;
+  box-shadow:0 5px 0 #ffc2de !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  text-align:center !important;
+  white-space:nowrap !important;
+}
+
+/* remove speech tail because it collided visually in the UI slot */
+.ui-zone .comment-box:after{
+  display:none !important;
+}
+
+/* Make the button grid fit below the comment, still 5 x 2 */
+.ui-zone .grid{
+  flex:1 1 auto !important;
+  height:auto !important;
+  min-height:0 !important;
+  display:grid !important;
+  grid-template-columns:repeat(5,1fr) !important;
+  grid-template-rows:repeat(2,1fr) !important;
+  gap:5px !important;
+}
+
+/* Compact enough that the lower row is visible */
+.ui-zone .grid button{
+  min-height:0 !important;
+  height:auto !important;
+  font-size:13px !important;
+  padding:2px 0 !important;
+  border-width:3px !important;
+}
+.ui-zone .grid button svg{
+  width:25px !important;
+  height:25px !important;
+}
+
+/* Game room ends exactly above the UI zone, creating a clean gap */
+.room{
+  top:90px !important;
+  bottom:326px !important;
+}
+
+/* Cat stays inside room and doesn't hide the comment */
+.in-room{
+  top:202px !important;
+}
+
+/* Short Safari viewport: slightly more compact */
+@media(max-height:820px){
+  .ui-zone{
+    bottom:92px !important;
+    height:224px !important;
+    gap:6px !important;
+  }
+  .ui-zone .comment-box{
+    height:44px !important;
+    flex-basis:44px !important;
+    font-size:11.5px !important;
+    padding:6px 10px !important;
+  }
+  .ui-zone .grid button{
+    font-size:12px !important;
+  }
+  .ui-zone .grid button svg{
+    width:23px !important;
+    height:23px !important;
+  }
+  .room{
+    bottom:322px !important;
+  }
+}
+
+/* Home screen standalone has more usable height */
+@media all and (display-mode: standalone){
+  .ui-zone{
+    bottom:28px !important;
+    height:224px !important;
+  }
+  .room{
+    bottom:254px !important;
+  }
+}
+
+
+/* ===== v20 buzz effects ===== */
+.combo-pop{
+  position:absolute;
+  top:40%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:28px;
+  color:#ff4fa0;
+  font-weight:bold;
+  z-index:999;
+  animation:comboAnim .6s ease forwards;
+}
+@keyframes comboAnim{
+  0%{transform:translate(-50%,-50%) scale(.5);opacity:0}
+  50%{transform:translate(-50%,-60%) scale(1.2);opacity:1}
+  100%{transform:translate(-50%,-80%) scale(1);opacity:0}
+}
+
+.screen-flash{
+  position:absolute;
+  inset:0;
+  background:#fff;
+  opacity:0;
+  pointer-events:none;
+}
+.screen-flash.active{
+  animation:flashAnim .3s;
+}
+@keyframes flashAnim{
+  0%{opacity:0}
+  50%{opacity:.6}
+  100%{opacity:0}
+}
+
+
+/* ===== v21 gacha super effect ===== */
+.gacha-flash{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle,#fff,#ffea00,#ff4fa0);
+  opacity:0;
+  pointer-events:none;
+  z-index:1000;
+}
+.gacha-flash.active{
+  animation:gachaFlash .8s ease;
+}
+@keyframes gachaFlash{
+  0%{opacity:0}
+  30%{opacity:1}
+  100%{opacity:0}
+}
+
+
+/* ===== v22 fever mode ===== */
+.fever-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(45deg,#ff4fa0,#ffd84a,#6de0ff);
+  opacity:0;
+  pointer-events:none;
+  z-index:900;
+}
+.fever-overlay.active{
+  animation:feverGlow 1s infinite alternate;
+}
+@keyframes feverGlow{
+  0%{opacity:.1}
+  100%{opacity:.35}
+}
+
+
+/* ===== v23 button fix: keep effects, never block taps ===== */
+
+/* Decorative / effect layers must never receive touch events */
+.screen-flash,
+.gacha-flash,
+.fever-overlay,
+.combo-pop,
+.fx,
+.sparkles,
+.sparkle,
+.badge,
+.aura,
+.halo,
+.dayflash,
+.toy-ball,
+.butterfly{
+  pointer-events:none !important;
+}
+
+/* The UI and its children must always be tappable */
+.ui-zone,
+.ui-zone *,
+.grid,
+.grid *,
+.title-menu,
+.title-menu *,
+.cat-choice,
+.cat-choice *,
+.sub-head,
+.sub-head *,
+.event-btns,
+.event-btns *,
+#foodBtn,
+#petBtn,
+#cleanBtn,
+#gachaBtn,
+#miniStart,
+#paw,
+#fish,
+#dressBtn,
+#restart,
+[data-screen],
+[data-cat],
+[data-eq]{
+  pointer-events:auto !important;
+}
+
+/* Keep bottom button panel above room decorations */
+.ui-zone{
+  z-index:2000 !important;
+}
+
+/* Keep modal event buttons above any effect */
+.event{
+  z-index:3000 !important;
+}
+.event-card,
+.event-card *{
+  pointer-events:auto !important;
+}
+
+/* Gacha / mini screens buttons must be above visual effects */
+.big,
+.target,
+.gacha-stage,
+.result,
+.closet-card button{
+  position:relative !important;
+  z-index:2100 !important;
+  pointer-events:auto !important;
+}
+
+/* Overlays remain visible but below actual UI buttons */
+.screen-flash,
+.gacha-flash,
+.fever-overlay{
+  z-index:900 !important;
+}
+
+/* Combo text remains visible but never tappable */
+.combo-pop{
+  z-index:1500 !important;
+}
+
+/* Cat should remain tappable */
+#cat{
+  pointer-events:auto !important;
+}
+
+/* Drag items remain tappable/movable */
+.drag{
+  pointer-events:auto !important;
+  z-index:2200 !important;
+}
+
+
+/* ===== v26 syntax + button fix ===== */
+.global-effect,
+.screen-flash,
+.gacha-flash,
+.fever-overlay,
+.combo-pop,
+.fx,
+.sparkles,
+.sparkle,
+.badge,
+.aura,
+.halo,
+.dayflash,
+.toy-ball,
+.butterfly{
+  pointer-events:none !important;
+  touch-action:none !important;
+}
+.global-effect{
+  position:absolute !important;
+  inset:0 !important;
+}
+.screen-flash,.gacha-flash,.fever-overlay{z-index:900 !important;}
+.combo-pop{z-index:1600 !important;}
+
+.screen:not(.active){
+  display:none !important;
+  pointer-events:none !important;
+}
+.screen.active{
+  display:block !important;
+  pointer-events:auto !important;
+}
+
+.ui-zone{
+  z-index:5000 !important;
+  pointer-events:auto !important;
+}
+.grid,.grid button,.ui-zone *{
+  pointer-events:auto !important;
+}
+.ui-zone .comment-box,
+.ui-zone .comment-box *{
+  pointer-events:none !important;
+}
+
+button,[data-screen],[data-cat],[data-eq],#cat,.drag,#gachaBtn,#miniStart,#paw,#fish{
+  pointer-events:auto !important;
+  touch-action:manipulation !important;
+}
+.event{z-index:6000 !important;}
+.event:not(.show){pointer-events:none !important;}
+.event.show,.event.show *{pointer-events:auto !important;}
+
+</style>
+
+
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ねこっち100">
+<link rel="manifest" href="manifest.json">
+
+</head>
+<body>
+<div id="app">
+
+<section id="title" class="screen active">
+  <div class="title-bg">
+    <div class="ribbon">ふわとろ猫育成</div>
+    <h1 class="logo"><span>ね</span><span>こ</span><span>っ</span><span>ち</span><b>100</b></h1>
+    <div class="title-card">
+      <div class="title-window"></div>
+      <div class="cat title-cat white">
+        <div class="ear left"></div><div class="ear right"></div>
+        <div class="head"><div class="eye left"></div><div class="eye right"></div><div class="nose"></div><div class="mouth"></div><div class="cheek left"></div><div class="cheek right"></div></div>
+        <div class="body"></div><div class="tail"></div><div class="paw p1"></div><div class="paw p2"></div>
+      </div>
+    </div>
+    <div class="title-menu">
+      <button class="primary" id="newGame">はじめる</button>
+      <button id="continueGame">つづき</button>
+      <button data-screen="guide">あそび方</button>
+      <button data-screen="record">きろく</button>
+      <button data-screen="mission">にんむ</button>
+    </div>
+  </div>
+</section>
+
+<section id="catSelect" class="screen">
+  <div class="cat-select-area">
+    <h2 class="select-title">ねこをえらんでね</h2>
+    <p class="select-lead">最初の相棒を6種類から選べるよ</p>
+    <div class="cat-choice-grid">
+      <button class="cat-choice" data-cat="white"><div class="mini-cat white"><i class="mini-ear l"></i><i class="mini-ear r"></i></div><span>白ねこ</span></button>
+      <button class="cat-choice" data-cat="black"><div class="mini-cat black"><i class="mini-ear l"></i><i class="mini-ear r"></i></div><span>黒ねこ</span></button>
+      <button class="cat-choice" data-cat="kiji"><div class="mini-cat kiji"><i class="mini-ear l"></i><i class="mini-ear r"></i></div><span>きじとら</span></button>
+      <button class="cat-choice" data-cat="shamu"><div class="mini-cat shamu"><i class="mini-ear l"></i><i class="mini-ear r"></i></div><span>しゃむねこ</span></button>
+      <button class="cat-choice" data-cat="mike"><div class="mini-cat mike"><i class="mini-ear l"></i><i class="mini-ear r"></i></div><span>みけねこ</span></button>
+      <button class="cat-choice" data-cat="persian"><div class="mini-cat persian"><i class="mini-ear l"></i><i class="mini-ear r"></i></div><span>ペルシャねこ</span></button>
+    </div>
+  </div>
+</section>
+
+<section id="game" class="screen">
+  <header class="hud">
+    <div class="day"><small>DAY</small><b id="dayText">001</b></div>
+    <div class="stats">
+      <p><span>おなか</span><b id="hunger">♥♥♥♥♡</b></p>
+      <p><span>ごきげん</span><b id="mood">♥♥♥♥♡</b></p>
+      <p><span>きれい</span><b id="clean">♥♥♥♥♡</b></p>
+    </div>
+    <button class="help" data-screen="guide">?</button>
+  </header>
+  <main id="room" class="room">
+    <div class="heart h1"></div><div class="heart h2"></div>
+    <div class="window"></div><div class="floor"></div><div class="sofa"></div><div class="tower"></div><div class="rug"></div><div class="bowl"></div>
+    <div id="poo" class="poo"></div>
+    <div id="cat" class="cat in-room white">
+      <div class="aura"></div><div class="halo"></div><div class="horns"><i></i><i></i></div><div class="crown"></div>
+      <div class="ear left"></div><div class="ear right"></div>
+      <div class="head">
+        <div class="eye left"></div><div class="eye right"></div>
+        <div class="sleep-eye left"></div><div class="sleep-eye right"></div>
+        <div class="brow left"></div><div class="brow right"></div>
+        <div class="nose"></div><div class="mouth"></div>
+        <div class="cheek left"></div><div class="cheek right"></div>
+      </div>
+      <div class="body"></div><div class="tail"></div><div class="paw p1"></div><div class="paw p2"></div><div class="zzz">Zz</div>
+    </div>
+    <div id="speech" class="speech">にゃー</div>
+    
+    <div id="fx" class="fx"></div>
+    <div id="sparkles" class="sparkles"></div>
+    <div id="dragFood" class="drag food"></div><div id="dragHand" class="drag hand"></div><div id="dragBroom" class="drag broom"></div>
+  </main>
+  <footer class="ui-zone">
+    <div id="commentBox" class="comment-box happy"><span class="emo"><i></i></span><span id="commentText" class="comment-text">今日もふわふわ。まずはごはんをあげてみよう。</span></div>
+    <div class="grid">
+      <button id="foodBtn"><svg viewBox="0 0 64 64"><ellipse cx="32" cy="42" rx="23" ry="11" fill="#fff" stroke="#6b3c5a" stroke-width="5"/><ellipse cx="32" cy="38" rx="18" ry="7" fill="#ffcc66"/><circle cx="25" cy="36" r="3" fill="#f08b5b"/><circle cx="36" cy="35" r="3" fill="#f08b5b"/></svg><span>ごはん</span></button>
+      <button id="petBtn"><svg viewBox="0 0 64 64"><path d="M17 43c4-17 16-21 26-9" fill="none" stroke="#6b3c5a" stroke-width="5" stroke-linecap="round"/><path d="M25 37c1-12 8-17 15-10" fill="none" stroke="#ff9ac4" stroke-width="7" stroke-linecap="round"/><circle cx="40" cy="27" r="6" fill="#ffd0e2" stroke="#6b3c5a" stroke-width="4"/></svg><span>なでる</span></button>
+      <button id="cleanBtn"><svg viewBox="0 0 64 64"><rect x="31" y="8" width="7" height="31" rx="3" fill="#8b5a2b" stroke="#6b3c5a" stroke-width="3"/><path d="M20 36h28l-4 16H24z" fill="#ffcc66" stroke="#6b3c5a" stroke-width="4"/><path d="M25 39v12M33 39v12M41 39v12" stroke="#d28a36" stroke-width="3"/></svg><span>そうじ</span></button>
+      <button data-screen="mini"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24" fill="#aeeaff" stroke="#6b3c5a" stroke-width="5"/><circle cx="25" cy="30" r="6" fill="#ff78b8"/><circle cx="39" cy="30" r="6" fill="#ff78b8"/><path d="M22 42q10 8 20 0" fill="none" stroke="#6b3c5a" stroke-width="4" stroke-linecap="round"/></svg><span>あそぶ</span></button>
+      <button data-screen="gacha"><svg viewBox="0 0 64 64"><circle cx="32" cy="30" r="21" fill="#ff8fc4" stroke="#6b3c5a" stroke-width="5"/><path d="M11 30h42" stroke="#fff" stroke-width="6"/><circle cx="32" cy="30" r="7" fill="#fff" stroke="#6b3c5a" stroke-width="4"/><rect x="20" y="49" width="24" height="8" rx="4" fill="#ffd75a" stroke="#6b3c5a" stroke-width="4"/></svg><span>ガチャ</span></button>
+      <button data-screen="closet"><svg viewBox="0 0 64 64"><rect x="14" y="16" width="36" height="40" rx="8" fill="#fff1a3" stroke="#6b3c5a" stroke-width="5"/><path d="M32 16v40M22 33h5M37 33h5" stroke="#6b3c5a" stroke-width="4" stroke-linecap="round"/></svg><span>家具</span></button>
+      <button id="dressBtn"><svg viewBox="0 0 64 64"><path d="M24 14h16l5 16 8 24H11l8-24z" fill="#ff9ac4" stroke="#6b3c5a" stroke-width="5" stroke-linejoin="round"/><path d="M25 15q7 9 14 0" fill="none" stroke="#fff" stroke-width="5"/></svg><span>いしょう</span></button>
+      <button data-screen="mission"><svg viewBox="0 0 64 64"><rect x="15" y="10" width="34" height="44" rx="6" fill="#fff" stroke="#6b3c5a" stroke-width="5"/><path d="M22 25l6 6 14-15M22 42h20" stroke="#ff78b8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>にんむ</span></button>
+      <button data-screen="record"><svg viewBox="0 0 64 64"><rect x="12" y="14" width="40" height="42" rx="8" fill="#fff" stroke="#6b3c5a" stroke-width="5"/><circle cx="32" cy="29" r="9" fill="#ffc06b" stroke="#6b3c5a" stroke-width="4"/><path d="M22 45h20" stroke="#ff78b8" stroke-width="5" stroke-linecap="round"/></svg><span>きろく</span></button>
+      <button data-screen="title"><svg viewBox="0 0 64 64"><path d="M12 34l20-18 20 18v20H18V34z" fill="#fff" stroke="#6b3c5a" stroke-width="5" stroke-linejoin="round"/><path d="M27 54V39h10v15" fill="#ffd75a" stroke="#6b3c5a" stroke-width="4"/></svg><span>もどる</span></button>
+    </div>
+  </footer>
+  <div id="badge" class="badge">にんむ達成</div>
+  <div id="event" class="event">
+    <div class="event-card">
+      <div class="event-time" id="eventTime">10</div>
+      <div class="event-img" id="eventImg"></div>
+      <h2 id="eventTitle">イベント</h2><p id="eventText">どうする？</p>
+      <div class="event-btns"><button id="yesBtn">はい</button><button id="noBtn">いいえ</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="guide" class="screen sub">
+  <div class="sub-head"><button data-screen="game">←</button><h2>あそび方</h2></div>
+  <div class="card"><h3>操作</h3><p>ごはんは口元へ、なでるは頭へ、掃除はうんちへドラッグ。成功すると猫がよろこぶよ。</p></div>
+  <div class="card"><h3>ごはん</h3><p>赤ちゃんはミルクだけ。子猫はミルク・ごはん・お魚。成猫になるとソーセージとチュールも食べられるよ。</p></div>
+  <div class="card"><h3>ヒント</h3><p>ごきげんやきれいが低いと悪魔化するよ。迷ったら、なでる・そうじ・ごはんの順で整えよう。</p></div>
+</section>
+
+<section id="mission" class="screen sub">
+  <div class="sub-head"><button data-screen="game">←</button><h2>にんむ50</h2></div>
+  <div id="missionList" class="mission-list"></div>
+</section>
+
+<section id="gacha" class="screen sub">
+  <div class="sub-head"><button data-screen="game">←</button><h2>ガチャ</h2></div>
+  <div class="panel" style="text-align:center;height:690px">
+    <div id="gachaStage" class="gacha-stage"><div id="gtext" class="gtext">ふわふわガチャ</div><div id="capsule" class="capsule"></div><div id="rarity" class="rarity">READY</div></div>
+    <button id="gachaBtn" class="big">まわす</button>
+    <div id="gachaResult" class="result"><div id="resultPic"></div><h3 id="resultName">まだ回してないよ</h3><p id="resultText">家具・衣装・着ぐるみが出るよ</p></div>
+  </div>
+</section>
+
+<section id="mini" class="screen sub">
+  <div class="sub-head"><button data-screen="game">←</button><h2>ミニゲーム</h2></div>
+  <div class="panel mini">
+    <div id="miniScore" class="mini-score">SCORE 000</div><div id="miniTime" class="mini-time">TIME 10</div>
+    <button id="miniStart" class="big">スタート</button>
+    <button id="paw" class="target pawt"><svg viewBox="0 0 120 100" aria-label="肉球">
+  <ellipse cx="60" cy="60" rx="29" ry="23" fill="#ff78b8" stroke="#6b3c5a" stroke-width="6"/>
+  <circle cx="31" cy="34" r="14" fill="#ff9acb" stroke="#6b3c5a" stroke-width="5"/>
+  <circle cx="52" cy="22" r="13" fill="#ff9acb" stroke="#6b3c5a" stroke-width="5"/>
+  <circle cx="76" cy="22" r="13" fill="#ff9acb" stroke="#6b3c5a" stroke-width="5"/>
+  <circle cx="94" cy="38" r="14" fill="#ff9acb" stroke="#6b3c5a" stroke-width="5"/>
+  <path d="M43 61c10 9 25 9 35 0" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".75"/>
+</svg></button><button id="fish" class="target fisht"><svg viewBox="0 0 130 90" aria-label="魚">
+  <path d="M14 45C34 17 75 14 103 45C75 76 34 73 14 45Z" fill="#5fcaff" stroke="#6b3c5a" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M102 45L124 25V65Z" fill="#3fb8f0" stroke="#6b3c5a" stroke-width="6" stroke-linejoin="round"/>
+  <circle cx="42" cy="39" r="5" fill="#422139"/>
+  <path d="M64 25C58 36 58 54 64 66" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+  <path d="M77 28C71 39 71 52 77 63" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".45"/>
+</svg></button>
+  </div>
+</section>
+
+<section id="closet" class="screen sub">
+  <div class="sub-head"><button data-screen="game">←</button><h2>家具・衣装</h2></div>
+  <div id="closetList" class="closet"></div>
+</section>
+
+<section id="record" class="screen sub">
+  <div class="sub-head"><button data-screen="game">←</button><h2>きろく</h2></div>
+  <div class="ending">
+    <div class="ending-cat"></div><h2 id="endingTitle">まだ育成中</h2><p id="endingText">100日後にカード風のエンディングが出ます。</p><b id="endingScore">-- 点</b>
+    <div class="record-mini"><div><span>任務</span><b id="recMission">0/50</b></div><div><span>ガチャ</span><b id="recGacha">0回</b></div><div><span>最高</span><b id="recMini">0点</b></div></div>
+    <button id="restart" class="big">もう1回あそぶ</button>
+  </div>
+</section>
+
+  <div id="flash" class="screen-flash global-effect" aria-hidden="true"></div>
+  <div id="gachaFlash" class="gacha-flash global-effect" aria-hidden="true"></div>
+  <div id="fever" class="fever-overlay global-effect" aria-hidden="true"></div>
+  <div id="combo" class="combo-pop global-effect" aria-hidden="true" style="display:none;"></div>
+
+</div>
+
+<script>
+(function(){
+
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const SAVE="nekocchi100_v5_premium";
+const cat=$("#cat"), room=$("#room"), poo=$("#poo"), speech=$("#speech"), fx=$("#fx"), sparkles=$("#sparkles"), commentBox=$("#commentBox");
+let busy=false, mode="", currentEvent=null, currentFood="ミルク", miniRun=false, miniScore=0, miniTime=10;
+let timers={day:null,cat:null,sleep:null,event:null,mini:null,look:null,cute:null,comment:null};
+const foodSvg={milk:'<svg viewBox="0 0 64 64"><rect x="22" y="15" width="20" height="36" rx="6" fill="#fff" stroke="#6b3c5a" stroke-width="5"/><path d="M24 27h16v18H24z" fill="#dff8ff"/><path d="M25 12h14" stroke="#6b3c5a" stroke-width="5" stroke-linecap="round"/></svg>',rice:'<svg viewBox="0 0 64 64"><ellipse cx="32" cy="42" rx="23" ry="11" fill="#fff" stroke="#6b3c5a" stroke-width="5"/><ellipse cx="32" cy="38" rx="18" ry="7" fill="#ffcc66"/><circle cx="25" cy="36" r="3" fill="#f08b5b"/></svg>',fish:'<svg viewBox="0 0 64 64"><path d="M14 32c9-12 25-12 36 0-11 12-27 12-36 0z" fill="#6ccfff" stroke="#6b3c5a" stroke-width="5"/><path d="M50 32l8-8v16z" fill="#6ccfff" stroke="#6b3c5a" stroke-width="5"/><circle cx="25" cy="29" r="3" fill="#422139"/></svg>',sausage:'<svg viewBox="0 0 64 64"><path d="M18 41c-8-11 21-34 32-21 9 11-21 34-32 21z" fill="#e77b5d" stroke="#6b3c5a" stroke-width="5"/><path d="M20 39l-6 5M48 21l5-6" stroke="#6b3c5a" stroke-width="5" stroke-linecap="round"/></svg>',churu:'<svg viewBox="0 0 64 64"><path d="M23 12h23l-7 40H16z" fill="#ff9ac4" stroke="#6b3c5a" stroke-width="5" stroke-linejoin="round"/><path d="M24 22h18" stroke="#fff" stroke-width="5"/><text x="31" y="41" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">Chu</text></svg>'};
+const missionTexts=["はじめてごはんをあげる","はじめてなでる","はじめて掃除する","1日目を終える","ニャーを聞く","ごきげん満タン","きれい満タン","おなか満タン","ミニゲーム10点","ガチャ1回","家具を使う","衣装をつける","3日連続満タン","天使になる","悪魔を解除","イベント成功","イベント3回成功","イベント5回成功","肉球10回","魚10回","ガチャ5回","豪華家具入手","豪華衣装入手","DAY10","DAY20","DAY30","DAY40","DAY50","DAY60","DAY70","DAY80","DAY90","DAY100","スコア30","スコア50","ミニゲーム30点","ごはん10回","なでる10回","掃除10回","うんち5回","猫が眠る","天使で1日","悪魔にならず10日","全ステ満タン10回","ガチャ結果交換","普通家具使用","豪華家具使用","記録を見る","任務25個","任務50個"];
+function def(){return{catType:"white",day:1,hunger:4,mood:4,clean:4,fullDays:0,fullCount:0,score:0,angel:false,devil:false,cure:0,ended:false,food:0,pet:0,cleanAct:0,pooClean:0,meow:0,slept:0,eventWin:0,paw:0,fish:0,miniBest:0,gacha:0,furnitureDeluxe:false,costume:false,costumeDeluxe:false,kigurumi:"",missions:{},endingTitle:"まだ育成中",endingText:"100日後にカード風のエンディングが出ます。"}}
+let state=load()||def();
+function load(){try{return JSON.parse(localStorage.getItem(SAVE))}catch(e){return null}}
+function save(){try{localStorage.setItem(SAVE,JSON.stringify(state))}catch(e){}}
+function show(id){$$(".screen").forEach(s=>s.classList.toggle("active",s.id===id)); if(id==="mission")renderMissions(); if(id==="closet")renderCloset(); if(id==="record")renderRecord(); if(id!=="mini")busy=false}
+$$("[data-screen]").forEach(b=>b.onclick=()=>show(b.dataset.screen));
+$("#newGame").onclick=()=>{state=def();save();show("catSelect")};
+$("#continueGame").onclick=()=>{state=load()||def();update();start();show("game")};
+$$("[data-cat]").forEach(b=>b.onclick=()=>{state=def();state.catType=b.dataset.cat;save();update();start();show("game");pop("スタート！")});
+$("#restart").onclick=()=>{state=def();save();show("catSelect")};
+function clamp(n){return Math.max(0,Math.min(5,n))}
+function hearts(n){return"♥".repeat(n)+"♡".repeat(5-n)}
+function sound(type="tap"){try{const ctx=new(window.AudioContext||window.webkitAudioContext)(),m=ctx.createGain();m.gain.value=.035;m.connect(ctx.destination);const notes={tap:[420,520],pet:[320,420,520],bad:[170,120],win:[520,660,840],sleep:[260,220],gacha:[320,460,680,920]}[type]||[420];const now=ctx.currentTime;notes.forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=type==="bad"?"sawtooth":"sine";o.frequency.value=f;g.gain.setValueAtTime(.0001,now+i*.06);g.gain.linearRampToValueAtTime(.7,now+i*.06+.03);g.gain.exponentialRampToValueAtTime(.001,now+i*.06+.22);o.connect(g);g.connect(m);o.start(now+i*.06);o.stop(now+i*.06+.25)});setTimeout(()=>ctx.close(),900)}catch(e){}}
+
+let bgmStarted=false;
+function startBGM(){
+ if(bgmStarted)return; bgmStarted=true;
+ try{
+  const ctx=new(window.AudioContext||window.webkitAudioContext)();
+  const master=ctx.createGain(); master.gain.value=.012; master.connect(ctx.destination);
+  const notes=[261.63,329.63,392,523.25,392,329.63]; let i=0;
+  setInterval(()=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.value=notes[i++%notes.length];const now=ctx.currentTime;g.gain.setValueAtTime(.0001,now);g.gain.linearRampToValueAtTime(.45,now+.35);g.gain.exponentialRampToValueAtTime(.0001,now+2.2);o.connect(g);g.connect(master);o.start(now);o.stop(now+2.3)},2400);
+ }catch(e){}
+}
+document.body.addEventListener("pointerdown",startBGM,{once:true});
+function say(t){speech.textContent=t;speech.classList.add("show");setTimeout(()=>speech.classList.remove("show"),1100)}
+function comment(t,kind){
+  const box=$("#commentBox");
+  const text=$("#commentText");
+  if(!box||!text)return;
+  text.textContent=t;
+  box.classList.remove("happy","warn","sleep","angel","devil");
+  box.classList.add(kind||"happy");
+  const emo=box.querySelector(".emo");
+  if(emo){
+    emo.innerHTML="";
+    if((kind||"happy")==="angel")emo.innerHTML='<span class="halo-mini"></span>';
+    if((kind||"happy")==="devil")emo.innerHTML='<span class="horn-mini"></span>';
+  }
+}
+function autoComment(){if(state.ended)return;if(state.hunger<=1)comment("おなかがすいてるみたい。成長に合うごはんをあげよう。","warn");else if(state.clean<=1)comment("少し汚れてきたよ。ほうきでお掃除すると安心。","warn");else if(state.mood<=1)comment("ごきげんが低いよ。頭をなでると元気になるかも。","warn");else if(state.angel)comment("天使ねこ中。ハート満タンを保つと高得点を狙えるよ。","angel");else comment(["のんびり中。たまにはミニゲームで遊んでみよう。","ヒント：3日連続で全ハート満タンなら天使化するよ。","ガチャで着ぐるみや家具を集めると記録が伸びるよ。"][Math.floor(Math.random()*3)])}
+function pop(t,bad=false){fx.dataset.text=t;fx.className="fx "+(bad?"bad pop":"pop");setTimeout(()=>fx.className="fx",900)}
+function badge(t){const b=$("#badge");b.textContent=t;b.classList.remove("show");void b.offsetWidth;b.classList.add("show")}
+function sparkle(x,y,n=8){const rr=room.getBoundingClientRect();for(let i=0;i<n;i++){const s=document.createElement("i");s.className="sparkle";s.style.left=(x-rr.left)+"px";s.style.top=(y-rr.top)+"px";const a=Math.random()*Math.PI*2,d=22+Math.random()*36;s.style.setProperty("--dx",Math.cos(a)*d+"px");s.style.setProperty("--dy",Math.sin(a)*d+"px");sparkles.appendChild(s);setTimeout(()=>s.remove(),850)}}
+function sparkleCat(n=8){const r=cat.getBoundingClientRect();sparkle(r.left+r.width/2,r.top+r.height/2,n)}
+function moodClass(c,ms=1100){cat.classList.remove("melt","grumpy","sleeping","jump","stretch");cat.classList.add(c);if(c!=="sleeping")setTimeout(()=>{cat.classList.remove(c);if(state.mood<=1)cat.classList.add("grumpy")},ms)}
+function applyCat(){["white","black","kiji","shamu","mike","persian"].forEach(c=>cat.classList.remove(c));cat.classList.add(state.catType||"white")}
+function update(){ $("#dayText").textContent=String(state.day).padStart(3,"0"); [["hunger",state.hunger],["mood",state.mood],["clean",state.clean]].forEach(([id,v])=>{const e=$("#"+id);e.textContent=hearts(v);e.classList.toggle("low",v<=1)});applyCat();cat.classList.toggle("angel",state.angel);cat.classList.toggle("devil",state.devil);cat.classList.toggle("dressed",state.costume||state.costumeDeluxe||state.kigurumi);room.classList.toggle("deluxe",state.furnitureDeluxe);checkMissions();renderRecord();autoComment();save()}
+function moveCat(){if(busy||state.ended)return;cat.style.left=(Math.floor(Math.random()*235)+12)+"px";cat.style.top=(Math.floor(Math.random()*250)+125)+"px"}
+function maybeSleep(){if(busy||state.ended)return;if(Math.random()<.34){busy=true;state.slept++;moodClass("sleeping",2800);say("すぅ…");sound("sleep");comment("眠っているよ。寝ている間はそっとしておこう。","sleep");setTimeout(()=>{cat.classList.remove("sleeping");busy=false;update()},3000)}}
+function cute(){if(busy||state.ended)return;if(Math.random()<.5){cat.classList.add("stretch");say("のび〜");setTimeout(()=>cat.classList.remove("stretch"),1300)}else{cat.classList.add("jump");say("ぴょん");setTimeout(()=>cat.classList.remove("jump"),850)}}
+function look(){if(busy||state.ended)return;cat.classList.remove("look-left","look-right","look-up");const a=["look-left","look-right","look-up",""][Math.floor(Math.random()*4)];if(a)cat.classList.add(a);setTimeout(()=>cat.classList.remove("look-left","look-right","look-up"),1200)}
+function endDay(){if(state.ended)return;state.day++;const guard=state.angel?1:0;state.hunger=clamp(state.hunger-1+guard);if(Math.random()<.7)state.mood=clamp(state.mood-1+guard);if(Math.random()<.75)state.clean=clamp(state.clean-1+guard);if(Math.random()<.5)poo.classList.add("show");if(state.hunger===5&&state.mood===5&&state.clean===5){state.fullDays++;state.fullCount++}else state.fullDays=0;if(state.fullDays>=3){state.angel=true;state.devil=false;pop("天使化！");sound("win");setTimeout(()=>sound("win"),260);comment("天使化したよ。やさしく育てられている証拠。","angel")}if(state.mood<=0||state.clean<=0){state.devil=true;state.angel=false;moodClass("grumpy");say("むむむ…");sound("bad");comment("悪魔化しているよ。なでる・掃除・イベント成功で戻そう。","devil")}if(state.day>=100){finish();return}if(Math.random()<.24)startEvent();update()}
+
+
+function gachaBurst(){
+  const g = document.getElementById("gachaFlash");
+  if(!g)return;
+  g.style.pointerEvents="none";
+  g.classList.remove("active");
+  void g.offsetWidth;
+  g.classList.add("active");
+}
+
+function buzzFlash(){
+  const f = document.getElementById("flash");
+  if(!f)return;
+  f.style.pointerEvents="none";
+  f.classList.remove("active");
+  void f.offsetWidth;
+  f.classList.add("active");
+}
+
+
+let comboCount=0;
+let fever=false;
+
+function triggerFever(){
+  fever=true;
+  const f=document.getElementById("fever");
+  if(f){f.style.pointerEvents="none";f.classList.add("active");}
+  combo("フィーバー！");
+}
+
+function endFever(){
+  fever=false;
+  const f=document.getElementById("fever");
+  if(f)f.classList.remove("active");
+}
+
+function addCombo(){
+  comboCount++;
+  if(comboCount>=5 && !fever){
+    triggerFever();
+    setTimeout(endFever,5000);
+    comboCount=0;
+  }
+}
+
+function combo(text){
+  const c = document.getElementById("combo");
+  if(!c)return;
+  c.style.pointerEvents="none";
+  c.textContent = text;
+  c.style.display="block";
+  setTimeout(()=>c.style.display="none",600);
+}
+
+function start(){Object.values(timers).forEach(t=>t&&clearInterval(t));timers.day=setInterval(endDay,16000);timers.cat=setInterval(moveCat,2300);timers.sleep=setInterval(maybeSleep,9500);timers.look=setInterval(look,3200);timers.cute=setInterval(cute,14000);timers.comment=setInterval(autoComment,7000)}
+cat.onclick=()=>{if(busy||state.ended)return;state.meow++;moodClass("jump",800);say("にゃー");pop("にゃー");sound("tap");sparkleCat(8);comment("今の状態は悪くないよ。ハートを満タンに近づけよう。","happy");update()};
+function rect(e){return e.getBoundingClientRect()}function hit(a,b){const x=rect(a),y=rect(b);return!(x.right<y.left||x.left>y.right||x.bottom<y.top||x.top>y.bottom)}
+function temp(l,t,w,h){const d=document.createElement("div");d.style.cssText=`position:absolute;left:${l}px;top:${t}px;width:${w}px;height:${h}px;pointer-events:none`;room.appendChild(d);return d}
+function availableFoods(){if(state.day<5)return[{k:"milk",n:"ミルク"}];if(state.day<20)return[{k:"milk",n:"ミルク"},{k:"rice",n:"ごはん"},{k:"fish",n:"お魚"}];return[{k:"milk",n:"ミルク"},{k:"rice",n:"ごはん"},{k:"fish",n:"お魚"},{k:"sausage",n:"ソーセージ"},{k:"churu",n:"チュール"}]}
+function startDrag(m){if(busy||state.ended)return;busy=true;mode=m;const el=m==="food"?$("#dragFood"):m==="pet"?$("#dragHand"):$("#dragBroom");if(m==="food"){const f=availableFoods()[Math.floor(Math.random()*availableFoods().length)];currentFood=f.n;el.innerHTML=foodSvg[f.k];say(f.n+"！")}else if(m==="pet"){el.innerHTML='<svg viewBox="0 0 64 64"><path d="M17 43c4-17 16-21 26-9" fill="none" stroke="#6b3c5a" stroke-width="5" stroke-linecap="round"/><path d="M25 37c1-12 8-17 15-10" fill="none" stroke="#ff9ac4" stroke-width="7" stroke-linecap="round"/><circle cx="40" cy="27" r="6" fill="#ffd0e2" stroke="#6b3c5a" stroke-width="4"/></svg>';say("頭をなでてね")}else{el.innerHTML='<svg viewBox="0 0 64 64"><rect x="31" y="8" width="7" height="31" rx="3" fill="#8b5a2b" stroke="#6b3c5a" stroke-width="3"/><path d="M20 36h28l-4 16H24z" fill="#ffcc66" stroke="#6b3c5a" stroke-width="4"/></svg>';say("うんちへ運んでね")}el.classList.add("active");el.style.left="24px";el.style.top="330px"}
+function initDrag(el){let dragging=false,ox=0,oy=0;el.onpointerdown=e=>{dragging=true;ox=e.offsetX;oy=e.offsetY;el.setPointerCapture(e.pointerId)};el.onpointermove=e=>{if(!dragging)return;const r=rect(room);el.style.left=(e.clientX-r.left-ox)+"px";el.style.top=(e.clientY-r.top-oy)+"px"};el.onpointerup=()=>{if(!dragging)return;dragging=false;judge(el);el.classList.remove("active")}}
+function judge(el){let ok=false;const cr=rect(cat),rr=rect(room);if(mode==="food"){const m=temp(cr.left-rr.left+42,cr.top-rr.top+52,42,38);ok=hit(el,m);m.remove();if(ok){state.hunger=clamp(state.hunger+1);state.mood=clamp(state.mood+1);state.food++;moodClass("jump",800);pop(currentFood+"成功");sound("pet");sparkleCat(8);comment(currentFood+"を食べたよ。おなかが少し回復した。","happy")}}if(mode==="pet"){const h=temp(cr.left-rr.left+20,cr.top-rr.top+14,88,64);ok=hit(el,h);h.remove();if(ok){state.mood=clamp(state.mood+1);state.pet++;if(state.devil)state.cure++;moodClass("melt",1300);pop("とろ〜ん");sound("pet");sparkleCat(12);comment("頭をなでられて気持ちよさそう。ごきげん回復。","happy")}}if(mode==="clean"){ok=poo.classList.contains("show")&&hit(el,poo);if(ok){poo.classList.remove("show");state.clean=clamp(state.clean+1);state.mood=clamp(state.mood+1);state.cleanAct++;state.pooClean++;if(state.devil)state.cure++;moodClass("jump",800);pop("ぴかぴか");sound("win");sparkleCat(10);comment("部屋がきれいになったよ。悪魔化予防になる。","happy")}}if(!ok){state.mood=clamp(state.mood-1);moodClass("grumpy");pop("しっぱい",true);sound("bad");comment("失敗するとごきげんが下がるよ。ゆっくり近づけよう。")}if(state.devil&&state.cure>=5){state.devil=false;state.cure=0;pop("悪魔解除！");sound("win")}mode="";setTimeout(()=>busy=false,120);update()}
+$("#foodBtn").onclick=()=>startDrag("food");$("#petBtn").onclick=()=>startDrag("pet");$("#cleanBtn").onclick=()=>startDrag("clean");["dragFood","dragHand","dragBroom"].forEach(id=>initDrag($("#"+id)));
+const events=[{t:"迷子の子猫",q:"助ける？",yes:true,bg:"linear-gradient(135deg,#d9faff,#ffe2f3)",img:"kitten"},{t:"高級ごはん",q:"こっそり食べる？",yes:false,bg:"linear-gradient(135deg,#fff0a8,#ffb1d6)",img:"food"},{t:"テレビ出演",q:"出てみる？",yes:true,bg:"linear-gradient(135deg,#c5b7ff,#fff)",img:"tv"},{t:"汚れた床",q:"後回しにする？",yes:false,bg:"linear-gradient(135deg,#cfa27b,#ffe6d1)",img:"dirt"},{t:"雨の日",q:"窓を閉める？",yes:true,bg:"linear-gradient(135deg,#b8e8ff,#e7f7ff)",img:"rain"},{t:"眠そうな夜",q:"そっと寝かせる？",yes:true,bg:"linear-gradient(135deg,#cab8ff,#fff0f8)",img:"night"}];
+function startEvent(){busy=true;currentEvent=events[Math.floor(Math.random()*events.length)];$("#eventTitle").textContent=currentEvent.t;$("#eventText").textContent=currentEvent.q;$("#eventImg").innerHTML=svgEvent(currentEvent.img);$("#event").classList.add("show");let left=10;$("#eventTime").textContent=left;clearInterval(timers.event);timers.event=setInterval(()=>{left--;$("#eventTime").textContent=left;if(left<=0)answer(null)},1000)}
+function answer(v){clearInterval(timers.event);$("#event").classList.remove("show");const ok=v===currentEvent.yes;if(ok){state.eventWin++;state.mood=clamp(state.mood+1);state.clean=clamp(state.clean+1);if(state.devil)state.cure++;moodClass("jump",800);pop("成功！");sound("win");comment("イベント成功。ハートが整いやすくなったよ。","happy")}else{state.mood=clamp(state.mood-1);state.clean=clamp(state.clean-1);moodClass("grumpy");pop("失敗",true);sound("bad");comment("イベント失敗。次は問題文をよく読もう。")}busy=false;update()}
+$("#yesBtn").onclick=()=>answer(true);$("#noBtn").onclick=()=>answer(false);
+
+function svgPrize(type){
+  const map={
+    ribbon:`<svg viewBox="0 0 180 120" class="prize-svg"><defs><linearGradient id="r1" x1="0" x2="1"><stop stop-color="#ff9ac4"/><stop offset="1" stop-color="#ff5aa7"/></linearGradient></defs><rect width="180" height="120" rx="28" fill="#fff4fb"/><path d="M48 60c-28-24-35-4-28 16 8 22 38 3 58-13-20-16-39-27-54-20" fill="url(#r1)" stroke="#6b3c5a" stroke-width="6" stroke-linejoin="round"/><path d="M132 60c28-24 35-4 28 16-8 22-38 3-58-13 20-16 39-27 54-20" fill="url(#r1)" stroke="#6b3c5a" stroke-width="6" stroke-linejoin="round"/><circle cx="90" cy="62" r="22" fill="#ffd75a" stroke="#6b3c5a" stroke-width="6"/><path d="M82 62h16" stroke="#fff" stroke-width="6" stroke-linecap="round"/></svg>`,
+    crown:`<svg viewBox="0 0 180 120" class="prize-svg"><rect width="180" height="120" rx="28" fill="#fff8cf"/><path d="M35 84L45 34l31 35 15-47 18 47 31-35 8 50z" fill="#ffd84a" stroke="#6b3c5a" stroke-width="7" stroke-linejoin="round"/><circle cx="45" cy="34" r="9" fill="#ff7cb8" stroke="#6b3c5a" stroke-width="5"/><circle cx="91" cy="22" r="9" fill="#9a78ff" stroke="#6b3c5a" stroke-width="5"/><circle cx="140" cy="34" r="9" fill="#6de0ff" stroke="#6b3c5a" stroke-width="5"/><path d="M52 91h86" stroke="#fff" stroke-width="8" stroke-linecap="round"/></svg>`,
+    sofa:`<svg viewBox="0 0 180 120" class="prize-svg"><rect width="180" height="120" rx="28" fill="#fff4fb"/><path d="M38 58h104c16 0 25 12 25 28v14H13V86c0-16 9-28 25-28z" fill="#ff8fc4" stroke="#6b3c5a" stroke-width="7"/><rect x="38" y="28" width="104" height="44" rx="20" fill="#ffadd7" stroke="#6b3c5a" stroke-width="7"/><circle cx="52" cy="102" r="8" fill="#6b3c5a"/><circle cx="128" cy="102" r="8" fill="#6b3c5a"/><path d="M58 42h64" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg>`,
+    furniture:`<svg viewBox="0 0 180 120" class="prize-svg"><rect width="180" height="120" rx="28" fill="#fff8d8"/><rect x="35" y="24" width="110" height="76" rx="16" fill="#ffb9dc" stroke="#6b3c5a" stroke-width="7"/><path d="M90 24v76M52 48h18M110 48h18M52 76h18M110 76h18" stroke="#6b3c5a" stroke-width="6" stroke-linecap="round"/><path d="M44 33h92" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg>`,
+    rabbit:`<svg viewBox="0 0 180 120" class="prize-svg"><rect width="180" height="120" rx="28" fill="#fff5fb"/><path d="M62 52c-25-45 5-55 22-10M118 52c25-45-5-55-22-10" fill="#fff" stroke="#6b3c5a" stroke-width="7" stroke-linecap="round"/><circle cx="90" cy="66" r="39" fill="#fff" stroke="#6b3c5a" stroke-width="7"/><circle cx="76" cy="64" r="5" fill="#422139"/><circle cx="104" cy="64" r="5" fill="#422139"/><ellipse cx="90" cy="77" rx="8" ry="5" fill="#ff9ac4"/><path d="M80 86q10 9 20 0" fill="none" stroke="#6b3c5a" stroke-width="5" stroke-linecap="round"/></svg>`,
+    bear:`<svg viewBox="0 0 180 120" class="prize-svg"><rect width="180" height="120" rx="28" fill="#fff2de"/><circle cx="56" cy="42" r="18" fill="#b67a45" stroke="#6b3c5a" stroke-width="7"/><circle cx="124" cy="42" r="18" fill="#b67a45" stroke="#6b3c5a" stroke-width="7"/><circle cx="90" cy="66" r="42" fill="#c88b52" stroke="#6b3c5a" stroke-width="7"/><circle cx="76" cy="62" r="5" fill="#422139"/><circle cx="104" cy="62" r="5" fill="#422139"/><ellipse cx="90" cy="76" rx="16" ry="11" fill="#f7d7b5" stroke="#6b3c5a" stroke-width="5"/><circle cx="90" cy="72" r="5" fill="#422139"/></svg>`,
+    rainbow:`<svg viewBox="0 0 180 120" class="prize-svg"><rect width="180" height="120" rx="28" fill="#f4fbff"/><path d="M25 88c8-42 38-63 65-63s57 21 65 63" fill="none" stroke="#ff5fa9" stroke-width="16" stroke-linecap="round"/><path d="M43 88c6-29 27-45 47-45s41 16 47 45" fill="none" stroke="#ffd84a" stroke-width="16" stroke-linecap="round"/><path d="M61 88c5-17 17-27 29-27s24 10 29 27" fill="none" stroke="#6de0ff" stroke-width="16" stroke-linecap="round"/><circle cx="36" cy="90" r="16" fill="#fff" stroke="#6b3c5a" stroke-width="5"/><circle cx="144" cy="90" r="16" fill="#fff" stroke="#6b3c5a" stroke-width="5"/></svg>`
+  };
+  return map[type]||map.ribbon;
+}
+function svgEvent(type){
+  const map={
+    kitten:`<svg viewBox="0 0 260 150" class="event-svg"><rect width="260" height="150" rx="26" fill="#dff8ff"/><circle cx="130" cy="82" r="44" fill="#ffc06b" stroke="#6b3c5a" stroke-width="8"/><path d="M93 50l17-32 19 36M167 50l-17-32-19 36" fill="#ffc06b" stroke="#6b3c5a" stroke-width="7" stroke-linejoin="round"/><circle cx="114" cy="78" r="6" fill="#422139"/><circle cx="146" cy="78" r="6" fill="#422139"/><ellipse cx="130" cy="94" rx="8" ry="5" fill="#ff6d9f"/><path d="M45 117c25-18 48-18 70 0" stroke="#fff" stroke-width="12" stroke-linecap="round"/><path d="M151 116c28-18 52-18 76 0" stroke="#fff" stroke-width="12" stroke-linecap="round"/></svg>`,
+    food:`<svg viewBox="0 0 260 150" class="event-svg"><rect width="260" height="150" rx="26" fill="#fff4c7"/><ellipse cx="130" cy="100" rx="76" ry="28" fill="#fff" stroke="#6b3c5a" stroke-width="8"/><ellipse cx="130" cy="91" rx="54" ry="18" fill="#ffcc66"/><circle cx="105" cy="86" r="8" fill="#e77b5d"/><circle cx="137" cy="82" r="8" fill="#f08b5b"/><circle cx="155" cy="94" r="7" fill="#81d878"/><path d="M88 45c20-19 62-19 84 0" stroke="#ff8fc4" stroke-width="13" stroke-linecap="round"/></svg>`,
+    tv:`<svg viewBox="0 0 260 150" class="event-svg"><rect width="260" height="150" rx="26" fill="#e8e0ff"/><rect x="52" y="35" width="156" height="84" rx="18" fill="#fff" stroke="#6b3c5a" stroke-width="8"/><rect x="72" y="52" width="116" height="47" rx="10" fill="#bdf7ff"/><circle cx="103" cy="75" r="12" fill="#ffc06b" stroke="#6b3c5a" stroke-width="5"/><circle cx="157" cy="75" r="12" fill="#ffc06b" stroke="#6b3c5a" stroke-width="5"/><path d="M98 120h64" stroke="#6b3c5a" stroke-width="8" stroke-linecap="round"/></svg>`,
+    rain:`<svg viewBox="0 0 260 150" class="event-svg"><rect width="260" height="150" rx="26" fill="#d9f4ff"/><path d="M58 55c18-28 52-16 56 5 18-18 51-4 53 19H49c-16 0-17-22 9-24z" fill="#fff" stroke="#6b3c5a" stroke-width="7"/><path d="M78 103l-10 18M119 101l-10 20M162 103l-10 18M199 99l-10 22" stroke="#6ccfff" stroke-width="8" stroke-linecap="round"/></svg>`,
+    night:`<svg viewBox="0 0 260 150" class="event-svg"><rect width="260" height="150" rx="26" fill="#c9bbff"/><circle cx="185" cy="45" r="28" fill="#fff8a8"/><circle cx="198" cy="36" r="28" fill="#c9bbff"/><rect x="50" y="86" width="160" height="35" rx="18" fill="#fff" stroke="#6b3c5a" stroke-width="7"/><circle cx="98" cy="80" r="24" fill="#ffc06b" stroke="#6b3c5a" stroke-width="7"/><path d="M88 81h20" stroke="#422139" stroke-width="5" stroke-linecap="round"/></svg>`,
+    dirt:`<svg viewBox="0 0 260 150" class="event-svg"><rect width="260" height="150" rx="26" fill="#ffe6d1"/><path d="M55 112c32-25 118-28 152 0" fill="#cfa27b" stroke="#6b3c5a" stroke-width="7"/><circle cx="92" cy="92" r="10" fill="#8c5a32"/><circle cx="135" cy="83" r="13" fill="#8c5a32"/><circle cx="175" cy="94" r="9" fill="#8c5a32"/><path d="M50 48h160" stroke="#fff" stroke-width="12" stroke-linecap="round"/></svg>`
+  };
+  return map[type]||map.kitten;
+}
+
+const items=[{n:"ふわふわリボン",d:"普通衣装。着せ替えできるよ",k:"costume",w:36,r:"R",img:"ribbon"},{n:"普通ソファ",d:"家具。部屋に配置できるよ",k:"normal",w:28,r:"R",img:"sofa"},{n:"プリンセス家具",d:"豪華家具。部屋が明るくなる",k:"furniture",w:15,r:"SR",img:"furniture"},{n:"王冠ドレス",d:"豪華衣装。猫に着せ替えできる",k:"costumeDeluxe",w:8,r:"SR",img:"crown"},{n:"うさぎ着ぐるみ",d:"着ぐるみ。猫がさらにかわいくなる",k:"kigurumi-rabbit",w:7,r:"SR",img:"rabbit"},{n:"くま着ぐるみ",d:"激レア着ぐるみ。記録映えする",k:"kigurumi-bear",w:4,r:"SSR",img:"bear"},{n:"虹色タワー",d:"超激レア豪華家具",k:"furniture",w:2,r:"SSR",img:"rainbow"}];
+function pick(){let total=items.reduce((a,b)=>a+b.w,0),r=Math.random()*total;for(const it of items){r-=it.w;if(r<=0)return it}return items[0]}
+$("#gachaBtn").onclick=()=>{const btn=$("#gachaBtn"),cap=$("#capsule"),gt=$("#gtext"),ra=$("#rarity");if(btn.disabled)return;btn.disabled=true;const it=pick();cap.classList.add("roll");gt.textContent="ドキドキ…";ra.textContent="???";sound("gacha");setTimeout(()=>{state.gacha++;if(it.k==="costume")state.costume=true;if(it.k==="costumeDeluxe")state.costumeDeluxe=true;if(it.k==="furniture")state.furnitureDeluxe=true;if(it.k.startsWith("kigurumi"))state.kigurumi=it.k;$("#resultName").textContent=it.n;$("#resultText").textContent=it.d;$("#resultPic").innerHTML=svgPrize(it.img);ra.textContent=it.r;gt.textContent=it.r==="SSR"?"虹確定！":it.r==="SR"?"激アツ！":"ゲット！";cap.classList.remove("roll");pop(it.r==="SSR"?"虹！":it.r==="SR"?"激アツ！":"ゲット！");sound(it.r==="R"?"tap":"win");if(it.r!=="R"){gachaBurst();combo("激レア！");}comment("ガチャで"+it.n+"を手に入れたよ。家具・衣装画面で使えるよ。");update();setTimeout(()=>btn.disabled=false,700)},1500)};
+$("#miniStart").onclick=()=>{miniRun=true;busy=true;miniScore=0;miniTime=10;miniUI();clearInterval(timers.mini);timers.mini=setInterval(()=>{miniTime--;miniUI();if(miniTime<=0){clearInterval(timers.mini);miniRun=false;busy=false;state.miniBest=Math.max(state.miniBest,miniScore);state.score=Math.max(state.score,Math.floor(miniScore/2));if(miniScore>=20){state.mood=clamp(state.mood+1);badge("ミニゲーム成功！")}pop("終了");sound("win");comment("ミニゲーム終了。高得点だとごきげんも上がるよ。","happy");update()}},1000)}
+function miniUI(){$("#miniScore").textContent="SCORE "+String(miniScore).padStart(3,"0");$("#miniTime").textContent="TIME "+miniTime}
+function hitMini(el,type){if(!miniRun)return;miniScore+=type==="paw"?2:3;if(type==="paw")state.paw++;else state.fish++;el.classList.add("hit");setTimeout(()=>el.classList.remove("hit"),250);el.style.left=(Math.floor(Math.random()*210)+24)+"px";el.style.top=(Math.floor(Math.random()*380)+170)+"px";sound("tap");miniUI()}
+$("#paw").onclick=()=>hitMini($("#paw"),"paw");$("#fish").onclick=()=>hitMini($("#fish"),"fish");
+$("#dressBtn").onclick=()=>{if(state.costume||state.costumeDeluxe||state.kigurumi){state.costume=!state.costume;pop("衣装チェンジ");sound("win");comment("衣装を切り替えたよ。ガチャで着ぐるみも集めよう。","happy");update()}else{pop("衣装なし",true);sound("bad");comment("まだ衣装がないよ。ガチャで手に入れよう。")}}
+
+function closetSvg(type){
+  const svg={
+    sofa:`<svg class="closet-svg" viewBox="0 0 180 110"><rect width="180" height="110" rx="24" fill="#fff6fb"/><path d="M38 56h104c15 0 24 12 24 27v14H14V83c0-15 9-27 24-27z" fill="#ff8fc4" stroke="#6b3c5a" stroke-width="7"/><rect x="38" y="28" width="104" height="43" rx="20" fill="#ffadd7" stroke="#6b3c5a" stroke-width="7"/><circle cx="54" cy="98" r="7" fill="#6b3c5a"/><circle cx="126" cy="98" r="7" fill="#6b3c5a"/><path d="M58 42h64" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg>`,
+    furniture:`<svg class="closet-svg" viewBox="0 0 180 110"><rect width="180" height="110" rx="24" fill="#fff8d8"/><rect x="35" y="20" width="110" height="76" rx="16" fill="#ffb9dc" stroke="#6b3c5a" stroke-width="7"/><path d="M90 20v76M52 44h18M110 44h18M52 72h18M110 72h18" stroke="#6b3c5a" stroke-width="6" stroke-linecap="round"/><path d="M44 30h92" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg>`,
+    ribbon:`<svg class="closet-svg" viewBox="0 0 180 110"><rect width="180" height="110" rx="24" fill="#fff4fb"/><path d="M48 55c-27-23-34-4-27 15 8 21 37 3 57-12-20-16-38-26-53-19" fill="#ff8fc4" stroke="#6b3c5a" stroke-width="6" stroke-linejoin="round"/><path d="M132 55c27-23 34-4 27 15-8 21-37 3-57-12 20-16 38-26 53-19" fill="#ff8fc4" stroke="#6b3c5a" stroke-width="6" stroke-linejoin="round"/><circle cx="90" cy="58" r="21" fill="#ffd75a" stroke="#6b3c5a" stroke-width="6"/></svg>`,
+    crown:`<svg class="closet-svg" viewBox="0 0 180 110"><rect width="180" height="110" rx="24" fill="#fff8cf"/><path d="M35 80L45 32l31 33 15-45 18 45 31-33 8 48z" fill="#ffd84a" stroke="#6b3c5a" stroke-width="7" stroke-linejoin="round"/><circle cx="45" cy="32" r="9" fill="#ff7cb8" stroke="#6b3c5a" stroke-width="5"/><circle cx="91" cy="20" r="9" fill="#9a78ff" stroke="#6b3c5a" stroke-width="5"/><circle cx="140" cy="32" r="9" fill="#6de0ff" stroke="#6b3c5a" stroke-width="5"/><path d="M52 87h86" stroke="#fff" stroke-width="8" stroke-linecap="round"/></svg>`,
+    rabbit:`<svg class="closet-svg" viewBox="0 0 180 110"><rect width="180" height="110" rx="24" fill="#fff5fb"/><path d="M62 48c-24-43 5-52 22-10M118 48c24-43-5-52-22-10" fill="#fff" stroke="#6b3c5a" stroke-width="7" stroke-linecap="round"/><circle cx="90" cy="62" r="38" fill="#fff" stroke="#6b3c5a" stroke-width="7"/><circle cx="76" cy="60" r="5" fill="#422139"/><circle cx="104" cy="60" r="5" fill="#422139"/><ellipse cx="90" cy="73" rx="8" ry="5" fill="#ff9ac4"/><path d="M80 82q10 9 20 0" fill="none" stroke="#6b3c5a" stroke-width="5" stroke-linecap="round"/></svg>`,
+    bear:`<svg class="closet-svg" viewBox="0 0 180 110"><rect width="180" height="110" rx="24" fill="#fff2de"/><circle cx="56" cy="38" r="17" fill="#b67a45" stroke="#6b3c5a" stroke-width="7"/><circle cx="124" cy="38" r="17" fill="#b67a45" stroke="#6b3c5a" stroke-width="7"/><circle cx="90" cy="62" r="40" fill="#c88b52" stroke="#6b3c5a" stroke-width="7"/><circle cx="76" cy="58" r="5" fill="#422139"/><circle cx="104" cy="58" r="5" fill="#422139"/><ellipse cx="90" cy="72" rx="16" ry="11" fill="#f7d7b5" stroke="#6b3c5a" stroke-width="5"/><circle cx="90" cy="68" r="5" fill="#422139"/></svg>`
+  };
+  return svg[type] || svg.sofa;
+}
+
+function renderCloset(){
+  const arr=[
+    ["普通ソファ","通常家具",true,false,"sofa"],
+    ["豪華家具","豪華家具",state.furnitureDeluxe,true,"furniture"],
+    ["ふわふわリボン","通常衣装",state.costume,false,"ribbon"],
+    ["王冠ドレス","豪華衣装",state.costumeDeluxe,true,"crown"],
+    ["うさぎ着ぐるみ","着ぐるみ",state.kigurumi==="kigurumi-rabbit",true,"rabbit"],
+    ["くま着ぐるみ","着ぐるみ",state.kigurumi==="kigurumi-bear",true,"bear"]
+  ];
+  $("#closetList").innerHTML=arr.map((a,i)=>`<div class="closet-card ${a[3]?"deluxe":""}"><div class="pic">${closetSvg(a[4])}</div><b>${a[0]}</b><span>${a[2]?"所持":"未所持"}・${a[1]}</span><button data-eq="${i}" ${a[2]?"":"disabled"}>使う</button></div>`).join("");
+  $$("[data-eq]").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.eq;
+    if(i===1&&state.furnitureDeluxe)state.furnitureDeluxe=true;
+    if(i===2&&state.costume)state.costume=true;
+    if(i===3&&state.costumeDeluxe)state.costumeDeluxe=true;
+    if(i===4)state.kigurumi="kigurumi-rabbit";
+    if(i===5)state.kigurumi="kigurumi-bear";
+    pop("セット完了");
+    sound("win");
+    comment("着せ替え完了。見た目を変えると育成が楽しくなるよ。","happy");
+    update();
+    renderCloset();
+  });
+}
+function setM(id){if(!state.missions[id]){state.missions[id]=true;if($("#game").classList.contains("active"))badge("にんむ達成 "+String(id).padStart(3,"0"))}}
+function checkMissions(){if(state.food>0)setM(1);if(state.pet>0)setM(2);if(state.cleanAct>0)setM(3);if(state.day>1)setM(4);if(state.meow>0)setM(5);if(state.mood>=5)setM(6);if(state.clean>=5)setM(7);if(state.hunger>=5)setM(8);if(state.miniBest>=10)setM(9);if(state.gacha>=1)setM(10);setM(11);if(state.costume||state.costumeDeluxe||state.kigurumi)setM(12);if(state.fullDays>=3)setM(13);if(state.angel)setM(14);if(!state.devil&&state.cure>=5)setM(15);if(state.eventWin>=1)setM(16);if(state.eventWin>=3)setM(17);if(state.eventWin>=5)setM(18);if(state.paw>=10)setM(19);if(state.fish>=10)setM(20);if(state.gacha>=5)setM(21);if(state.furnitureDeluxe)setM(22);if(state.costumeDeluxe||state.kigurumi)setM(23);[10,20,30,40,50,60,70,80,90,100].forEach((d,i)=>{if(state.day>=d)setM(24+i)});if(state.score>=30)setM(34);if(state.score>=50)setM(35);if(state.miniBest>=30)setM(36);if(state.food>=10)setM(37);if(state.pet>=10)setM(38);if(state.cleanAct>=10)setM(39);if(state.pooClean>=5)setM(40);if(state.slept>0)setM(41);if(state.angel)setM(42);if(state.day>=10&&!state.devil)setM(43);if(state.fullCount>=10)setM(44);if(state.gacha>=1)setM(45);setM(46);if(state.furnitureDeluxe)setM(47);setM(48);const c=Object.keys(state.missions).length;if(c>=25)setM(49);if(c>=49)setM(50)}
+function renderMissions(){checkMissions();$("#missionList").innerHTML=missionTexts.map((t,i)=>{const id=i+1,d=!!state.missions[id],cls=d?"done":id%5===0?"gold":id%3===0?"rare":"";return`<label class="mission ${cls}"><input type="checkbox" ${d?"checked":""} disabled><span>${String(id).padStart(3,"0")}</span>${t}</label>`}).join("")}
+function finish(){state.ended=true;busy=true;checkMissions();const mc=Object.keys(state.missions).length,ss=(state.hunger+state.mood+state.clean)*3,bonus=state.angel?12:0,pen=state.devil?18:0;state.score=Math.min(100,Math.max(0,Math.round(ss+mc+state.eventWin*2+state.gacha+state.miniBest/2+bonus-pen)));if(state.angel&&state.score>=88){state.endingTitle="大天使ねこっちエンド";state.endingText="光に包まれた最高の100日。ねこっちは幸せを運ぶ大天使になったよ。"}else if(state.furnitureDeluxe&&state.costumeDeluxe&&state.score>=80){state.endingTitle="プリンセス牧場エンド";state.endingText="豪華家具と衣装でキラキラ生活。自慢したくなる牧場になったよ。"}else if(state.miniBest>=45){state.endingTitle="遊びの天才エンド";state.endingText="ミニゲームで大活躍。ねこっちは元気いっぱいのスター猫になったよ。"}else if(state.score>=70){state.endingTitle="ハッピー牧場エンド";state.endingText="よく食べて、よく遊んで、幸せいっぱいの100日だったよ。"}else if(state.score>=45){state.endingTitle="のんびり牧場エンド";state.endingText="まだ伸びしろあり。次は天使化と任務達成を狙おう。"}else{state.endingTitle="しょんぼり牧場エンド";state.endingText="お世話が足りなかったみたい。次はハートを守ろう。"}save();renderRecord();sound("win");show("record")}
+function renderRecord(){$("#endingTitle").textContent=state.endingTitle;$("#endingText").textContent=state.endingText;$("#endingScore").textContent=state.ended?state.score+" 点":"-- 点";$("#recMission").textContent=Object.keys(state.missions||{}).length+"/50";$("#recGacha").textContent=(state.gacha||0)+"回";$("#recMini").textContent=(state.miniBest||0)+"点"}
+
+function unlockPointerLayers(){
+  ["flash","gachaFlash","fever","combo"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.pointerEvents="none";
+  });
+  document.querySelectorAll(".screen-flash,.gacha-flash,.fever-overlay,.combo-pop,.fx,.sparkles,.badge").forEach(el=>{
+    el.style.pointerEvents="none";
+  });
+}
+document.addEventListener("DOMContentLoaded",unlockPointerLayers);
+setInterval(unlockPointerLayers,1000);
+
+
+function __forceEffectNoTap(){
+  document.querySelectorAll(".global-effect,.screen-flash,.gacha-flash,.fever-overlay,.combo-pop,.fx,.sparkles,.sparkle,.badge,.aura,.halo,.dayflash,.toy-ball,.butterfly").forEach(el=>{
+    el.style.pointerEvents="none";
+    el.style.touchAction="none";
+  });
+}
+document.addEventListener("DOMContentLoaded",__forceEffectNoTap);
+setInterval(__forceEffectNoTap,500);
+
+update();renderMissions();renderCloset();start();
+})();
+</script>
+</body>
+</html>
